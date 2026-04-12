@@ -3,6 +3,7 @@
    ============================================================ */
 
 let canvas, ctx, particles = [], animId;
+let screenFlash = 0; // 0 to 1 intensity
 
 function initCanvas() {
   canvas = document.getElementById('effectsCanvas');
@@ -24,19 +25,114 @@ function resizeCanvas() {
 
 function loop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  const items = window.state?.workspaceItems || [];
+
+  // 1. Bottom Layer: Molecular Mesh (under items)
+  items.forEach(it => {
+    if (it.isReacting) drawMolecularMesh(ctx, it.x, it.y, it.liquidColor);
+  });
+
+  // 2. Middle Layer: Wires & Particles
+  if (items.length > 0) drawWires(ctx, items);
+
   particles = particles.filter(p => p.life > 0);
   particles.forEach(p => {
     p.update();
     p.draw(ctx);
   });
   
-  // Draw wires if state is available
-  if (window.state && window.state.workspaceItems) {
-    drawWires(ctx, window.state.workspaceItems);
+  // 3. Top Layer: Dynamic Lighting
+  drawLighting(ctx, items);
+
+  // 4. Global Layer: Screen Flash
+  if (screenFlash > 0) {
+    ctx.save();
+    ctx.fillStyle = `rgba(255, 255, 255, ${screenFlash * 0.8})`;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+    screenFlash -= 0.05;
+    if (screenFlash < 0) screenFlash = 0;
   }
-  
+
   animId = requestAnimationFrame(loop);
 }
+
+function drawMolecularMesh(ctx, x, y, color) {
+  const time = Date.now() * 0.001;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(time * 0.2);
+  ctx.globalAlpha = 0.15;
+  ctx.strokeStyle = color || '#38bdf8';
+  ctx.lineWidth = 1;
+
+  for (let i = 0; i < 6; i++) {
+    const angle = (i * Math.PI) / 3;
+    const r = 40 + Math.sin(time * 2) * 5;
+    const px = Math.cos(angle) * r;
+    const py = Math.sin(angle) * r;
+    
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(px, py);
+    ctx.stroke();
+    
+    // Draw hexagon nodes
+    ctx.beginPath();
+    ctx.arc(px, py, 2, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  
+  // Outer hex
+  ctx.beginPath();
+  for (let i = 0; i <= 6; i++) {
+    const angle = (i * Math.PI) / 3;
+    const r = 40 + Math.sin(time * 2) * 5;
+    const px = Math.cos(angle) * r;
+    const py = Math.sin(angle) * r;
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawLighting(ctx, items) {
+  items.forEach(it => {
+    // Heat Source Glow (Burner)
+    if (it.toolId === 'bunsen-burner' && it.active) {
+      const gradient = ctx.createRadialGradient(it.x, it.y, 10, it.x, it.y, 150);
+      gradient.addColorStop(0, 'rgba(245, 158, 11, 0.3)');
+      gradient.addColorStop(1, 'rgba(245, 158, 11, 0)');
+      
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      ctx.fillStyle = gradient;
+      ctx.fillRect(it.x - 150, it.y - 150, 300, 300);
+      ctx.restore();
+    }
+    
+    // Chemical Luminescence (Colored liquid glow)
+    if (it.type === 'beaker' && it.liquidLevel > 0) {
+      const color = it.liquidColor || 'rgba(56, 189, 248, 0.2)';
+      const gradient = ctx.createRadialGradient(it.x, it.y + 20, 5, it.x, it.y + 20, 60);
+      gradient.addColorStop(0, color.replace(/[\d\.]+\)$/, '0.1)'));
+      gradient.addColorStop(1, 'rgba(0,0,0,0)');
+      
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      ctx.fillStyle = gradient;
+      ctx.fillRect(it.x - 60, it.y - 40, 120, 120);
+      ctx.restore();
+    }
+  });
+}
+
+function triggerFlash() {
+  screenFlash = 1.0;
+}
+
+window.triggerFlash = triggerFlash;
 
 function drawWires(ctx, items) {
   const supplies = items.filter(it => it.toolId === 'power-supply' && it.connections);
@@ -180,7 +276,7 @@ class SmokeParticle {
 }
 
 class SparkParticle {
-  constructor(x, y) {
+  constructor(x, y, color) {
     this.x = x;
     this.y = y;
     const angle = Math.random() * Math.PI * 2;
@@ -189,7 +285,7 @@ class SparkParticle {
     this.vy = Math.sin(angle) * speed;
     this.life = 1;
     this.decay = Math.random() * 0.05 + 0.03;
-    this.color = `hsl(${Math.random() * 60 + 10}, 100%, 60%)`;
+    this.color = color || `hsl(${Math.random() * 60 + 10}, 100%, 60%)`;
     this.r = Math.random() * 3 + 1;
   }
   update() {
@@ -212,7 +308,7 @@ class SparkParticle {
 }
 
 class FlameParticle {
-  constructor(x, y) {
+  constructor(x, y, baseHue = 30) {
     this.x = x + (Math.random() - 0.5) * 12;
     this.y = y;
     this.vx = (Math.random() - 0.5) * 1.5;
@@ -220,7 +316,8 @@ class FlameParticle {
     this.r = Math.random() * 8 + 4;
     this.life = 1;
     this.decay = Math.random() * 0.04 + 0.02;
-    this.hue = Math.random() * 30; // orange-yellow
+    // baseHue: 30 (orange), 210 (blue), 60 (yellow-white)
+    this.hue = baseHue + (Math.random() * 20 - 10);
   }
   update() {
     this.x += this.vx + Math.sin(Date.now() * 0.01 + this.y) * 0.5;
@@ -293,16 +390,16 @@ function emitPrecipitate(x, y, color, count = 30) {
   }
 }
 
-function emitSparks(x, y, count = 20) {
+function emitSparks(x, y, count = 20, color) {
   for (let i = 0; i < count; i++) {
-    particles.push(new SparkParticle(x, y));
+    particles.push(new SparkParticle(x, y, color));
   }
 }
 
-function emitFlames(x, y, duration = 999999) {
+function emitFlames(x, y, duration = 999999, hue = 30) {
   const interval = setInterval(() => {
     for (let i = 0; i < 3; i++) {
-      particles.push(new FlameParticle(x, y));
+      particles.push(new FlameParticle(x, y, hue));
     }
   }, 50);
   return interval; // caller must clearInterval
@@ -402,6 +499,53 @@ function triggerReactionEffect(effect, x, y, reaction) {
       const flameInterval = emitFlames(x, y);
       setTimeout(() => clearInterval(flameInterval), 1000); // longer burn
       emitBubbles(x, y, '#ef4444', 80, 2000); 
+      break;
+    }
+    case 'fire-acetylene': {
+      emitSparks(x, y, 50, '#fde68a');
+      emitSmoke(x, y - 10, 'rgba(50,50,50,0.6)', 3500);
+      const flameInterval = emitFlames(x, y, 3500, 50); // vàng chói, hơi khói
+      setTimeout(() => clearInterval(flameInterval), 2000);
+      break;
+    }
+    case 'fire-methane': {
+      emitSparks(x, y, 30, '#93c5fd');
+      const flameInterval = emitFlames(x, y, 3000, 210); // ngọn lửa xanh (blue)
+      setTimeout(() => clearInterval(flameInterval), 1500);
+      break;
+    }
+    case 'explosion-pop': {
+      emitSparks(x, y, 60, '#e0f2fe');
+      emitSmoke(x, y - 15, 'rgba(255,255,255,0.4)', 1500);
+      const flashInterval = emitFlames(x, y, 500, 60); 
+      setTimeout(() => clearInterval(flashInterval), 300);
+      break;
+    }
+    case 'layering-ester': {
+      // Hiệu ứng phân lớp: Bọt khí trắng mờ tập trung ở bề mặt
+      emitBubbles(x, y - 20, 'rgba(255,255,255,0.4)', 40, 5000);
+      emitSparks(x, y, 15); // Tỏa nhiệt nhẹ
+      break;
+    }
+    case 'fire-blue-sulfur': {
+      emitSparks(x, y, 20, '#60a5fa');
+      const flameInterval = emitFlames(x, y, 3000, 230); // Xanh mờ (hue ~230)
+      setTimeout(() => clearInterval(flameInterval), 1500);
+      break;
+    }
+    case 'smoke-brown-iron': {
+      emitSparks(x, y, 40, '#f59e0b');
+      emitSmoke(x, y - 15, 'rgba(146,64,14,0.7)', 5000); // Khói nâu đỏ FeCl3
+      break;
+    }
+    case 'complex-blue-black': {
+      emitBubbles(x, y, 'rgba(30,58,138,0.6)', 30, 4000);
+      emitSparks(x, y, 10, '#1e40af'); 
+      break;
+    }
+    case 'complex-violet': {
+      emitBubbles(x, y, 'rgba(124,58,237,0.5)', 25, 3000);
+      emitSparks(x, y, 12, '#a78bfa');
       break;
     }
     case 'neutral':

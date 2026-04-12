@@ -960,18 +960,27 @@ function renderSafety() {
         An toàn Phòng thí nghiệm (GHS)
       </div>
     </div>
-    <div class="lib-section-desc">Hệ thống phân loại quốc tế GHS về mức độ nguy hại của hóa chất. Hãy luôn tuân thủ bảo hộ lao động.</div>
+    <div class="lib-section-desc">Hệ thống phân loại quốc tế GHS về mức độ nguy hại của hóa chất và các trang bị bảo hộ (PPE) bắt buộc.</div>
     <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:20px; margin-top:30px">
-      ${SAFETY_SIGNS.map(s => `
-        <div class="rule-tag" style="padding: 25px; border-left: 4px solid #fb7185">
+      ${SAFETY_SIGNS.map(s => {
+        const isPPE = s.level === 'Bắt buộc' || s.level === 'Khuyên dùng';
+        const badgeClass = isPPE ? 'badge-info' : 'badge-danger';
+        const labelSuffix = isPPE ? '' : ' NGUY HIỂM';
+        const iconHTML = LIB_ICONS[s.icon] ? 
+          `<div style="color:var(--lib-accent); width:45px; height:45px; display:flex; align-items:center; justify-content:center">${LIB_ICONS[s.icon]}</div>` : 
+          `<div style="font-size:45px">${s.icon}</div>`;
+
+        return `
+        <div class="rule-tag" style="padding: 25px; border-left: 4px solid ${isPPE ? 'var(--lib-accent)' : '#fb7185'}; background: rgba(15,23,42,0.4)">
           <div style="display:flex; justify-content:space-between; align-items:flex-start">
-            <div style="font-size:45px">${s.icon}</div>
-            <div class="lib-badge badge-danger">${s.level} NGUY HIỂM</div>
+            ${iconHTML}
+            <div class="lib-badge ${badgeClass}">${s.level}${labelSuffix}</div>
           </div>
           <div style="font-family:'Orbitron', sans-serif; font-size:16px; font-weight:800; color:#fff; margin-top:15px">${s.title.toUpperCase()}</div>
           <div style="font-size:12px; opacity:0.7; line-height:1.6; margin-top:10px">${s.desc}</div>
         </div>
-      `).join('')}
+        `;
+      }).join('')}
     </div>
   `;
 }

@@ -157,18 +157,36 @@ const ChemistryEngine = {
     for (let i = chemicals.length - 1; i >= 0; i--) {
       const chem = chemicals[i];
       const ionColor = window.PHENOMENA_DB?.getLiquidColorForChem(chem.id) || chem.display?.liquidColor;
-      if (ionColor && ionColor !== 'rgba(241, 245, 249, 0.35)') {
-        // Phức Đồng Amoniac (pH > 8 + NH3)
+      
+      if (ionColor) {
+        // --- NÂNG CAO: PHỨC CHẤT & REDOX DỰA TRÊN pH ---
+
+        // A. Phức Đồng Amoniac [Cu(NH₃)₄]²⁺ (Xanh thẫm)
         if (chem.cation === 'Cu2' && ph > 8 && chemicals.find(c => c.id === 'nh3')) {
-          return 'rgba(30, 58, 138, 0.8)'; // Xanh thẫm (Deep Blue)
+          return 'rgba(30, 58, 138, 0.9)'; 
         }
-        return ionColor;
+
+        // B. Phức Bạc Amoniac [Ag(NH₃)₂]⁺ (Trong suốt/Bạc khi tráng gương)
+        if (chem.cation === 'Ag' && chemicals.find(c => c.id === 'nh3')) {
+          if (chemicals.find(c => c.id === 'glucose')) return 'rgba(226, 232, 240, 0.9)'; // Màu bạc
+          return 'rgba(248, 250, 252, 0.2)'; // Tan thành trong suốt
+        }
+
+        // C. Trạng thái KMnO₄ (MnO₄⁻) dựa trên môi trường pH
+        if (chem.id === 'kmno4') {
+          if (ph < 4) return 'rgba(224, 242, 254, 0.1)';   // Mn²⁺ (Axit: Không màu)
+          if (ph >= 4 && ph <= 8.5) return 'rgba(120, 113, 108, 0.6)'; // MnO₂ (Trung tính: Nâu đen)
+          if (ph > 8.5) return 'rgba(22, 163, 74, 0.6)';   // MnO₄²⁻ (Kiềm: Xanh lục)
+        }
+
+        if (ionColor !== 'rgba(241, 245, 249, 0.35)') return ionColor;
       }
     }
 
-    // 4. Kiểm tra loại organic (Lipid/Ester thường không màu hoặc hơi vàng)
-    const lipid = chemicals.find(c => c.subtype === 'lipid' || c.subtype === 'ester');
-    if (lipid && lipid.liquidColor) return lipid.liquidColor;
+    // 4. Kiểm tra Starch + Iodine (Blue-Black)
+    if (chemicals.find(c => c.id === 'starch') && chemicals.find(c => c.id === 'iodine')) {
+      return 'rgba(30, 58, 138, 0.95)';
+    }
 
     return 'rgba(224, 242, 254, 0.3)';
   },
@@ -342,13 +360,82 @@ const ChemistryEngine = {
   },
 
   /**
+   * Kiểm tra các phản ứng điều chế phức tạp (Synthesis/Preparation)
+   * Tự động phát hiện 2-3 thành phần + Nhiệt độ + Xúc tác
+   */
+  checkSynthesisReactions(chemicals, environment) {
+    if (!chemicals || chemicals.length === 0) return null;
+    const ids = chemicals.map(c => c.id);
+    const hasHeat = environment && environment.isHeating;
+
+    // 1. ĐIỀU CHẾ CLO (PTN): MnO2 + HCl + t°
+    if (ids.includes('mno2') && ids.includes('hcl') && hasHeat) {
+      return { type: 'synthesis', key: 'mno2+hcl+heat', message: '🟢 Đang điều chế khí Clo (Cl₂)...' };
+    }
+
+    // 2. NHIỆT NHÔM: Fe2O3 + Al + t°
+    if (ids.includes('fe2o3') && ids.includes('al') && hasHeat) {
+      return { type: 'thermite', key: 'fe2o3+al+heat', message: '🔥 Phản ứng Nhiệt nhôm đang diễn ra mãnh liệt!' };
+    }
+
+    // ——— HỆ THỐNG GỢI Ý THÔNG MINH TỔNG QUÁT ———
+    const allHeatReactions = Object.values(window.HEAT_REACTIONS || {});
+    
+    for (const r of allHeatReactions) {
+      if (!r.reactants || r.reactants.length === 0) continue;
+      
+      // Kiểm tra xem beaker có chứa TẤT CẢ các chất phản ứng chính không
+      const hasAllReactants = r.reactants.every(reqId => {
+        // Hỗ trợ alias ch3cooh <-> ch3cooh_glacial
+        if (reqId === 'ch3cooh') return ids.includes('ch3cooh') || ids.includes('ch3cooh_glacial');
+        return ids.includes(reqId);
+      });
+
+      if (hasAllReactants) {
+        // Nếu đủ chất nhưng chưa đủ điều kiện (Nhiệt/Xúc tác)
+        const needsHeat = r.requires?.heat && !hasHeat;
+        const catalystId = r.requires?.catalyst;
+        const needsCatalyst = catalystId && !ids.includes(catalystId);
+
+        if (needsHeat || needsCatalyst) {
+          let missingLabel = [];
+          if (needsHeat) missingLabel.push('Nhiệt độ (t°)');
+          if (needsCatalyst) {
+            const cat = window.CHEMICALS.find(c => c.id === catalystId);
+            missingLabel.push(cat ? cat.name : catalystId);
+          }
+          
+          return {
+            type: 'hint',
+            id: `hint_${r.reactants.join('_')}`,
+            message: `[GỢI_Ý] Phát hiện tổ hợp: ${r.synthesis?.name || 'Phản ứng mới'}. Cần thêm: ${missingLabel.join(' & ')}.`
+          };
+        } else {
+           // Nếu đủ điều kiện, trả về phản ứng thật (nếu là synthesis)
+           // Tìm key của phản ứng này trong HEAT_REACTIONS
+           const rKey = Object.keys(window.HEAT_REACTIONS).find(k => window.HEAT_REACTIONS[k] === r);
+           return { type: 'synthesis', key: rKey, message: r.observation || 'Đang xảy ra phản ứng...' };
+        }
+      }
+    }
+
+    // Luôn ưu tiên Lên men & Đất đèn (không cần nhiệt)
+    if (ids.includes('yeast') && ids.includes('glucose')) {
+       return { type: 'synthesis', key: 'glucose+yeast', message: '🍇 Quá trình lên men rượu đang diễn ra.' };
+    }
+    if (ids.includes('cac2') && ids.includes('h2o')) {
+       return { type: 'synthesis', key: 'cac2+h2o', message: '🔥 Đất đèn đang giải phóng khí Acetylene (C₂H₂).' };
+    }
+
+    return null;
+  },
+
+  /**
    * Kiểm tra tính dẫn điện của dung dịch
    */
   checkConductivity(chemicals) {
     if (!chemicals || chemicals.length === 0) return 0;
-    // Salta, acids, bases are electrolytes
     const electrolytes = chemicals.filter(c => ['salt', 'acid', 'base'].includes(c.type));
-    // Simple heuristic: conductivity proportional to electrolyte presence
     return electrolytes.length > 0 ? 100 : 0;
   }
 };
