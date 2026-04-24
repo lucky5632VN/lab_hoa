@@ -266,22 +266,6 @@ body {
   background-color: #080c14;
 }
 
-.workspace-scanner {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.4), transparent);
-  box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
-  z-index: 10;
-  pointer-events: none;
-  animation: scan-vertical 8s linear infinite;
-  opacity: 0.3;
-}
-
-@keyframes scan-vertical {
-  0% { top: 0; }
-  100% { top: 100%; }
-}
 
 .lab-id-watermark {
   position: absolute;
@@ -571,13 +555,14 @@ body {
   position: absolute;
   cursor: grab;
   user-select: none;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s;
   z-index: 20;
+  transform: scale(var(--item-scale, 1));
 }
 .ws-item:active { cursor: grabbing; z-index: 50; }
 .ws-item.selected {
   filter: drop-shadow(0 0 12px var(--accent-blue));
-  transform: scale(1.05);
+  transform: scale(calc(var(--item-scale, 1) * 1.05));
   background: rgba(56, 189, 248, 0.1);
   border-radius: var(--radius-md);
   z-index: 50;
@@ -639,6 +624,24 @@ body {
   30%,70% { transform: translateX(4px); }
 }
 .shake { animation: shake-screen 0.5s ease; }
+
+.heating {
+  animation: heat-glow 2s infinite alternate;
+  transform-origin: center bottom;
+}
+@keyframes heat-glow {
+  0% { filter: drop-shadow(0 0 5px #fbbf24); transform: scale(1); }
+  100% { filter: drop-shadow(0 0 12px #f59e0b); transform: scale(1.05); }
+}
+
+.stirring-anim {
+  animation: stir-motion 0.5s infinite linear;
+  transform-origin: center center;
+}
+@keyframes stir-motion {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
 /* ——— KNOWLEDGE TERMINAL (HUD) ——— */
 /* ——— KNOWLEDGE TERMINAL (HUD) ——— */
@@ -2611,4 +2614,362 @@ body {
 
 .qa-footer b {
   color: var(--accent-blue);
+}
+
+/* ============================================================
+   NEW FEATURES CSS — QuantumLab v4.1
+   ============================================================ */
+
+/* ——— 1. SCROLL ZOOM — Scale Badge ——— */
+.scale-badge {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30,58,138,0.9);
+  color: #93c5fd;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  border: 1px solid rgba(147,197,253,0.4);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+  z-index: 100;
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* ——— 10. MUSIC CONTROLLER ——— */
+.music-track-select {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  color: #34d399;
+  border-radius: 8px;
+  font-size: 11px;
+  padding: 5px 8px;
+  cursor: pointer;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.music-track-select:hover {
+  border-color: #34d399;
+  background: rgba(52, 211, 153, 0.1);
+}
+
+.music-track-select option {
+  background: #0f172a;
+  color: #fff;
+}
+
+/* ——— 5. GHS ICONS on Chemical Cards ——— */
+.chem-ghs-icons {
+  display: flex;
+  gap: 2px;
+  margin-top: 3px;
+}
+.ghs-icon-mini {
+  font-size: 11px;
+  cursor: help;
+  line-height: 1;
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+}
+.chem-item-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ——— 7. LAB RULES MODAL ——— */
+.lab-rules-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(12px);
+  z-index: 999999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.lab-rules-modal.show {
+  display: flex;
+  animation: modal-enter 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes modal-enter {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+.lab-rules-box {
+  background: linear-gradient(145deg, #0f172a, #1e293b);
+  border: 1px solid rgba(56,189,248,0.3);
+  border-radius: 20px;
+  max-width: 780px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.8), 0 0 60px rgba(56,189,248,0.1);
+  padding: 30px;
+}
+.lab-rules-box::-webkit-scrollbar { width: 4px; }
+.lab-rules-box::-webkit-scrollbar-thumb { background: rgba(56,189,248,0.3); border-radius: 2px; }
+
+.lab-rules-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(56,189,248,0.2);
+}
+.lab-rules-icon {
+  font-size: 48px;
+  filter: drop-shadow(0 0 16px rgba(56,189,248,0.5));
+  animation: pulse 3s infinite;
+}
+.lab-rules-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: 2px;
+  text-shadow: 0 0 20px rgba(56,189,248,0.4);
+  margin: 0;
+}
+.lab-rules-subtitle {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-top: 4px;
+  letter-spacing: 3px;
+}
+
+.lab-rules-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+@media (max-width: 560px) {
+  .lab-rules-grid { grid-template-columns: 1fr; }
+}
+.lab-rule-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 14px;
+  transition: all 0.2s;
+}
+.lab-rule-card:hover {
+  background: rgba(56,189,248,0.05);
+  border-color: rgba(56,189,248,0.2);
+  transform: translateY(-1px);
+}
+.rule-num {
+  min-width: 28px;
+  height: 28px;
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+  flex-shrink: 0;
+}
+.rule-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: -2px;
+}
+.rule-text {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+.rule-text strong {
+  color: #f1f5f9;
+  font-size: 13px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.lab-rules-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.rules-warning {
+  font-size: 12px;
+  color: #fbbf24;
+  background: rgba(251,191,36,0.1);
+  border: 1px solid rgba(251,191,36,0.25);
+  border-radius: 8px;
+  padding: 10px 16px;
+  text-align: center;
+}
+.btn-confirm-rules {
+  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 14px 32px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 20px rgba(59,130,246,0.4);
+  font-family: var(--font-main);
+}
+.btn-confirm-rules:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(59,130,246,0.6);
+  background: linear-gradient(135deg, #2563eb, #60a5fa);
+}
+.btn-confirm-rules:active { transform: scale(0.97); }
+
+/* ——— 8. pH UNIVERSAL INDICATOR STRIP ——— */
+.ph-strip-widget {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(10,14,26,0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 30px;
+  padding: 8px 16px;
+  z-index: 500;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  min-width: 380px;
+  transition: opacity 0.4s;
+}
+.ph-strip-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  white-space: nowrap;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
+}
+.ph-strip-track {
+  flex: 1;
+  position: relative;
+}
+.ph-strip-gradient {
+  height: 16px;
+  border-radius: 8px;
+  background: linear-gradient(to right,
+    #ff1a1a 0%,    /* 0 - Deep Red */
+    #ff4d1a 7.14%, /* 1 - Red-Orange */
+    #ff801a 14.28%,/* 2 - Orange */
+    #ffb31a 21.42%,/* 3 - Gold */
+    #ffe61a 28.57%,/* 4 - Yellow */
+    #e6ff1a 35.71%,/* 5 - Yellow-Green */
+    #b3ff1a 42.85%,/* 6 - Light Green */
+    #66ff1a 50%,   /* 7 - Green (Neutral) */
+    #1aff66 57.14%,/* 8 - Teal-Green */
+    #1affb3 64.28%,/* 9 - Teal */
+    #1affff 71.42%,/* 10 - Light Blue */
+    #1a80ff 78.57%,/* 11 - Blue */
+    #1a1aff 85.71%,/* 12 - Royal Blue */
+    #801aff 92.85%,/* 13 - Violet */
+    #b31aff 100%   /* 14 - Purple */
+  );
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.4);
+}
+
+/* GHS Pictograms - Professional Lab Standards */
+.ghs-icon-mini {
+  display: flex;
+  gap: 3px;
+  margin-top: 4px;
+}
+
+.ghs-diamond {
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border: 1.5px solid #dc2626;
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  position: relative;
+}
+
+.ghs-diamond .ghs-symbol {
+  transform: rotate(-45deg);
+  width: 12px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  font-weight: 900;
+  font-size: 10px;
+}
+
+.ghs-diamond.ghs-corrosive .ghs-symbol::before { content: '🧪'; }
+.ghs-diamond.ghs-toxic .ghs-symbol::before { content: '💀'; }
+.ghs-diamond.ghs-flammable .ghs-symbol::before { content: '🔥'; }
+.ghs-diamond.ghs-oxidizer .ghs-symbol::before { content: '⚡'; }
+.ghs-diamond.ghs-explosive .ghs-symbol::before { content: '💥'; }
+.ghs-diamond.ghs-hazard .ghs-symbol::before { content: '!'; }
+
+.ph-strip-marker {
+  position: absolute;
+  top: -4px;
+  width: 6px;
+  height: 22px;
+  background: white;
+  border-radius: 3px;
+  box-shadow: 0 0 8px rgba(255,255,255,0.8), 0 0 2px rgba(0,0,0,0.5);
+  transform: translateX(-50%);
+  transition: left 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none;
+}
+.ph-strip-ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3px;
+}
+.ph-strip-ticks span {
+  font-size: 8px;
+  color: #475569;
+  font-weight: 600;
+  font-family: 'Orbitron', sans-serif;
+}
+.ph-strip-value {
+  font-size: 13px;
+  font-weight: 800;
+  color: #38bdf8;
+  min-width: 52px;
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  white-space: nowrap;
+}
+
+/* ——— 6. LIQUID COLOR — Enhanced ——— */
+/* Màu dung dịch được áp dụng qua liquidColor trong SVG renderers */
+/* Thêm CSS cho hiệu ứng khi có màu đặc biệt (KMnO4, CuSO4, etc.) */
+.beaker-svg, .flask-svg, .test-tube-svg {
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
 }

@@ -2,6 +2,99 @@
    lab.js — Main Lab Controller & SVG Renderers
    ============================================================ */
 
+// ——— AUDIO SYSTEM ———
+const AudioSystem = {
+  _alertAudio: null,
+  _shatterAudio: null,
+  _isMuted: false,
+  _volume: 0.7,
+
+  init() {
+    try {
+      this._alertAudio = new Audio('music/alert.mp3');
+      this._alertAudio.preload = 'auto';
+      this._alertAudio.volume = this._volume;
+
+      this._shatterAudio = new Audio('music/shatter.mp3');
+      this._shatterAudio.preload = 'auto';
+      this._shatterAudio.volume = this._volume;
+
+      this._explosionAudio = new Audio('music/explosion.mp3');
+      this._explosionAudio.preload = 'auto';
+      this._explosionAudio.volume = this._volume;
+    } catch(e) {
+      console.warn('[AudioSystem] Could not load audio files:', e);
+    }
+  },
+
+  /**
+   * Phát âm thanh cảnh báo
+   * @param {number} level - 1: warning (ngắn), 2: danger (đầy đủ)
+   */
+  playAlert(level = 2) {
+    if (this._isMuted || !this._alertAudio) return;
+    try {
+      this._alertAudio.currentTime = 0;
+      this._alertAudio.volume = level >= 2 ? this._volume : this._volume * 0.4;
+      // Dừng sau thời gian tương ứng level
+      const duration = level >= 2 ? 4000 : 1500;
+      this._alertAudio.play().catch(() => {});
+      if (level < 2) {
+        setTimeout(() => { try { this._alertAudio.pause(); } catch(e){} }, duration);
+      }
+    } catch(e) {
+      console.warn('[AudioSystem] playAlert error:', e);
+    }
+  },
+
+  stopAlert() {
+    if (!this._alertAudio) return;
+    try {
+      this._alertAudio.pause();
+      this._alertAudio.currentTime = 0;
+    } catch(e) {}
+  },
+
+  /**
+   * Phát âm thanh nổ và vỡ thủy tinh
+   */
+  playShatter() {
+    if (this._isMuted || !this._shatterAudio) return;
+    try {
+      this._shatterAudio.currentTime = 0;
+      this._shatterAudio.play().catch(() => {});
+    } catch(e) {
+      console.warn('[AudioSystem] playShatter error:', e);
+    }
+  },
+
+  /**
+   * Phát âm thanh nổ (không vỡ cốc)
+   */
+  playExplosion() {
+    if (this._isMuted || !this._explosionAudio) return;
+    try {
+      this._explosionAudio.currentTime = 0;
+      this._explosionAudio.play().catch(() => {});
+    } catch(e) {
+      console.warn('[AudioSystem] playExplosion error:', e);
+    }
+  },
+
+  setMuted(muted) {
+    this._isMuted = muted;
+    if (muted) this.stopAlert();
+  },
+
+  setVolume(vol) {
+    this._volume = Math.max(0, Math.min(1, vol));
+    if (this._alertAudio) this._alertAudio.volume = this._volume;
+  }
+};
+
+// Khởi tạo AudioSystem khi DOM sẵn sàng
+document.addEventListener('DOMContentLoaded', () => AudioSystem.init());
+
 // ——— STATE ———
 let state = {
   currentExperiment: 'free',
@@ -183,11 +276,25 @@ function startExperience() {
   const intro = document.getElementById('introOverlay');
   intro.classList.add('hide');
   
-  // Show setup modal after a short delay for cinematic transition
+  // Show lab rules modal FIRST, then safety gear modal
+  setTimeout(() => {
+    const rulesModal = document.getElementById('labRulesModal');
+    if (rulesModal) {
+      rulesModal.classList.add('show');
+    } else {
+      document.getElementById('welcomeSetupModal').classList.add('show');
+    }
+    addLog('info', '[PROTOCOL_01] KHỞI CHẠY QUY TRÌNH KIỂM TRA NỘI QUY.');
+  }, 500);
+}
+
+function confirmLabRules() {
+  const rulesModal = document.getElementById('labRulesModal');
+  if (rulesModal) rulesModal.classList.remove('show');
   setTimeout(() => {
     document.getElementById('welcomeSetupModal').classList.add('show');
-    addLog('info', '[PROTOCOL_01] KHỞI CHẠY QUY TRÌNH KIỂM TRA BẢO HỘ.');
-  }, 500);
+    addLog('info', '[PROTOCOL_02] NỘI QUY ĐÃ ĐƯỢC XÁC NHẬN. KIỂM TRA BẢO HỘ...');
+  }, 300);
 }
 
 function enterLab() {
@@ -215,7 +322,7 @@ function initLab() {
   renderChemicals();
   setupWorkspaceDrop();
   loadExperiment('electrolysis');
-  addLog('info', '[HỆ_THỐNG] KHỞI CHẠY QUANTUM LAB CORE v2.4... TRẠNG THÁI: SẴN SÀNG.');
+  addLog('info', '[HỆ_THỐNG] KHỞI CHẠY QUANTUM LAB CORE v2.5... TRẠNG THÁI: SẴN SÀNG.');
 }
 
 if (document.readyState === 'loading') {
@@ -372,30 +479,32 @@ const SVG_RENDERERS = {
     const on = item.state === 'on';
     return `
     <svg width="60" height="80" viewBox="0 0 60 80">
-      <!-- Base -->
-      <rect x="10" y="65" width="40" height="10" rx="4"
-        fill="#334155" stroke="#475569" stroke-width="1.5"/>
-      <!-- Barrel -->
-      <rect x="24" y="20" width="12" height="48" rx="3"
-        fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
-      <!-- Air holes -->
-      <circle cx="30" cy="40" r="2" fill="#0f172a"/>
-      <circle cx="30" cy="50" r="2" fill="#0f172a"/>
-      <!-- Nozzle -->
-      <ellipse cx="30" cy="20" rx="8" ry="3" fill="#334155" stroke="#475569" stroke-width="1"/>
+      <!-- Glass Bottle Body -->
+      <path d="M 12 75 Q 10 75 10 70 L 10 45 Q 10 30 30 30 Q 50 30 50 45 L 50 70 Q 50 75 48 75 Z"
+        fill="rgba(224,242,254,0.15)" stroke="rgba(186,230,253,0.5)" stroke-width="1.5"/>
+      
+      <!-- Alcohol Liquid (Violet tint) -->
+      <path d="M 10 70 Q 10 75 30 75 Q 50 75 50 70 L 50 50 Q 30 45 10 50 Z"
+        fill="rgba(139,92,246,0.3)" opacity="0.8"/>
+      
+      <!-- Metallic Cap -->
+      <rect x="24" y="25" width="12" height="8" rx="2" fill="#64748b" stroke="#475569" stroke-width="1"/>
+      
       ${on ? `
-        <!-- Flame (animated via CSS class) -->
-        <ellipse cx="30" cy="16" rx="6" ry="8" fill="rgba(251,191,36,0.3)"
-          class="heating"/>
-        <ellipse cx="30" cy="14" rx="4" ry="6" fill="rgba(251,191,36,0.6)"/>
-        <ellipse cx="30" cy="11" rx="3" ry="5" fill="rgba(254,240,138,0.8)"/>
-        <ellipse cx="30" cy="8" rx="2" ry="3" fill="#fff" opacity="0.9"/>
+        <!-- Flame (Spirit Lamp Flame) -->
+        <g class="heating">
+          <path d="M 30 25 Q 22 15 30 0 Q 38 15 30 25 Z" fill="rgba(251,191,36,0.4)"/>
+          <path d="M 30 25 Q 26 18 30 8 Q 34 18 30 25 Z" fill="rgba(251,191,36,0.8)"/>
+          <path d="M 30 25 Q 28 20 30 15 Q 32 20 30 25 Z" fill="#fff" opacity="0.9"/>
+        </g>
       ` : `
         <!-- Wick -->
-        <line x1="30" y1="20" x2="30" y2="14" stroke="#6b7280" stroke-width="2"/>
+        <rect x="28" y="15" width="4" height="12" rx="1" fill="#e2e8f0" stroke="#94a3b8" stroke-width="0.5"/>
+        <line x1="30" y1="15" x2="30" y2="10" stroke="#64748b" stroke-width="1.5" stroke-linecap="round"/>
       `}
-      <!-- Gas valve -->
-      <circle cx="42" cy="62" r="4" fill="#374151" stroke="#4b5563" stroke-width="1"/>
+      
+      <!-- Reflections -->
+      <path d="M 15 45 Q 15 35 25 35" stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none" stroke-linecap="round"/>
     </svg>`;
   },
 
@@ -692,8 +801,9 @@ function renderTools() {
       clearTimeout(hoverTimeout); hideTooltip(); isShowing = false;
       const surface = document.getElementById('workspaceSurface');
       const rect = surface.getBoundingClientRect();
-      const x = rect.width / 2;
-      const y = rect.height / 2;
+      // Adjust center to account for the 380px right panel
+      const x = (rect.width - 400) / 2;
+      const y = rect.height / 2 - 30;
       placeItemOnWorkspace('tool', tool.id, x, y);
     });
     grid.appendChild(div);
@@ -878,6 +988,14 @@ function renderChemicals(filter = '') {
           ${badges.map(b => `<span class="badge ${b}">${b}</span>`).join('')}
           ${chem.isVirtual ? '<span class="badge v-db">V-DB</span>' : ''}
         </div>
+        <div class="chem-ghs-icons">
+          ${(chem.hazards||[]).includes('corrosive') ? '<div class="ghs-diamond ghs-corrosive" title="Ăn mòn (GHS05)"><div class="ghs-symbol"></div></div>' : ''}
+          ${(chem.hazards||[]).includes('toxic') ? '<div class="ghs-diamond ghs-toxic" title="Độc (GHS06)"><div class="ghs-symbol"></div></div>' : ''}
+          ${(chem.hazards||[]).includes('flammable') ? '<div class="ghs-diamond ghs-flammable" title="Dễ cháy (GHS02)"><div class="ghs-symbol"></div></div>' : ''}
+          ${(chem.hazards||[]).includes('oxidizer') ? '<div class="ghs-diamond ghs-oxidizer" title="Oxy hóa (GHS03)"><div class="ghs-symbol"></div></div>' : ''}
+          ${(chem.hazards||[]).includes('explosive') ? '<div class="ghs-diamond ghs-explosive" title="Nổ (GHS01)"><div class="ghs-symbol"></div></div>' : ''}
+          ${(chem.hazards||[]).includes('hazard') ? '<div class="ghs-diamond ghs-hazard" title="Nguy hiểm (GHS07)"><div class="ghs-symbol"></div></div>' : ''}
+        </div>
       </div>
     `;
     let hoverTimeout;
@@ -945,8 +1063,9 @@ function renderChemicals(filter = '') {
       
       const surface = document.getElementById('workspaceSurface');
       const rect = surface.getBoundingClientRect();
-      const x = rect.width / 2;
-      const y = rect.height / 2;
+      // Adjust center to account for the 380px right panel
+      const x = (rect.width - 400) / 2;
+      const y = rect.height / 2 - 30;
       placeItemOnWorkspace('chemical', chem.id, x, y);
     });
     fragment.appendChild(div);
@@ -1202,7 +1321,8 @@ function addChemicalToContainer(container, chemItem, customIncrement = null) {
     if (risk) {
       addLog('danger', risk.message);
       if (risk.type === 'fire') {
-        triggerReactionEffect('bubbles-intense', container.x + 40, container.y + 40, { color: '#f59e0b' });
+        const scale = container.scale || 1;
+        triggerReactionEffect('bubbles-intense', container.x + 40 * scale, container.y + 40 * scale, { color: '#f59e0b' }, scale);
         showDanger('⚠️ SỰ CỐ AN TOÀN', risk.message);
       }
     }
@@ -1446,7 +1566,8 @@ function checkReaction(beaker) {
 
   // 3. COMBUSTION CHECK (O2 + Heat)
   if (window.ChemistryEngine) {
-    const combustion = window.ChemistryEngine.checkCombustion(contents, state.environment);
+    const localEnv = { ...(state.environment || {}), isHeating: beaker.isHeating };
+    const combustion = window.ChemistryEngine.checkCombustion(contents, localEnv);
     if (combustion) {
       const effect = window.PHENOMENA_DB.getCombustionEffect(combustion.fuel.id);
       executeReaction(beaker, {
@@ -1462,7 +1583,8 @@ function checkReaction(beaker) {
 
   // --- NEW: SYNTHESIS / PREPARATION CHECK ---
   if (window.ChemistryEngine) {
-    const synth = window.ChemistryEngine.checkSynthesisReactions(contents, state.environment);
+    const localEnv = { ...(state.environment || {}), isHeating: beaker.isHeating };
+    const synth = window.ChemistryEngine.checkSynthesisReactions(contents, localEnv);
     if (synth) {
       if (synth.type === 'hint') {
         // Chỉ log gợi ý nếu chưa log gần đây cho beaker này
@@ -1485,24 +1607,11 @@ function checkReaction(beaker) {
 
   // 4. GUNPOWDER REACTION CHECK (3 agents)
   if (window.ChemistryEngine) {
-    const gunpowder = window.ChemistryEngine.checkGunpowder(contents, state.environment);
+    const localEnv = { ...(state.environment || {}), isHeating: beaker.isHeating };
+    const gunpowder = window.ChemistryEngine.checkGunpowder(contents, localEnv);
     if (gunpowder) {
-      if (gunpowder.type === 'gunpowder_explosion') {
-        executeReaction(beaker, {
-          equation: gunpowder.equation,
-          type: 'explosion',
-          effect: 'explosion-violent',
-          observation: '💣 THUỐC SÚNG ĐEN PHÁT NỔ! Phòng thí nghiệm bị phá hủy!',
-          synthesis: { name: '💣 THUỐC SÚNG ĐEN PHÁT NỔ!', icon: '💥', category: 'Vũ khí / Pháo hoa' },
-          logType: 'danger',
-          hazardLevel: 3,
-          hazardType: 'explosion',
-          shatter: true,
-          colorChange: { end: '#fbbf24' }
-        });
-        return;
-      } else if (gunpowder.type === 'gunpowder_mixture') {
-        // Chỉ hiện lần đầu khi đủ 3 thành phần — KHÔNG dùng modal cảnh báo (chưa có nhiệt)
+      // ƯU TIÊN hiển thị hỗn hợp trước nếu chưa mixed, trừ khi đang đun nóng thì nổ ngay
+      if (gunpowder.type === 'gunpowder_mixture' || (gunpowder.type === 'gunpowder_explosion' && !beaker._gunpowderMixed)) {
         const isAlreadyMixed = beaker._gunpowderMixed;
         if (!isAlreadyMixed) {
           beaker._gunpowderMixed = true;
@@ -1510,7 +1619,6 @@ function checkReaction(beaker) {
           beaker.liquidColor = 'rgba(20,15,10,0.95)';
           beaker.liquidLevel = Math.max(beaker.liquidLevel || 0, 40);
           
-          // Hiện synthesis banner + log — KHÔNG hiện modal nguy hiểm (hazardLevel=0)
           updateActiveReactionDisplay({
             equation: '2KNO₃ + S + 3C ⟶ Hỗn hợp thuốc súng đen',
             observation: '🧨 Hỗn hợp bột đen hình thành. Thêm nguồn NHIỆT để kích nổ!',
@@ -1518,7 +1626,19 @@ function checkReaction(beaker) {
           });
           addLog('danger', '💣 Đã tạo hỗn hợp thuốc súng đen! ĐỪNG đưa gần lửa!');
           refreshWorkspaceItem(beaker);
+          
+          // Nếu đang đun nóng thì nổ ngay sau khi hiện thông báo
+          if (localEnv.isHeating) {
+            setTimeout(() => {
+              triggerGunpowderExplosion(beaker, gunpowder);
+            }, 1500);
+            return;
+          }
         }
+      } 
+      
+      if (gunpowder.type === 'gunpowder_explosion' && beaker._gunpowderMixed) {
+        triggerGunpowderExplosion(beaker, gunpowder);
         return;
       }
     }
@@ -1735,9 +1855,15 @@ function executeReaction(container, reaction) {
     }
 
     // Particle effects
-    const cx = container.x + 40;
-    const cy = container.y + (container.liquidLevel ? (100 - container.liquidLevel) : 40);
-    triggerReactionEffect(reaction.effect, cx, cy, reaction);
+    const scale = container.scale || 1;
+    const cx = container.x + 40 * scale;
+    const cy = container.y + (container.liquidLevel ? (100 - container.liquidLevel) : 40) * scale;
+    triggerReactionEffect(reaction.effect, cx, cy, reaction, scale);
+
+    // Âm thanh nổ (nếu không vỡ)
+    if (reaction.type === 'explosion' && !reaction.shatter) {
+        AudioSystem.playExplosion();
+    }
 
     // Toxic gas overlay
     if (reaction.toxicGas) {
@@ -1748,7 +1874,9 @@ function executeReaction(container, reaction) {
     // Thiết lập vỡ cốc
     if (reaction.shatter) {
         setTimeout(() => {
-            addLog('danger', `💥 VỤ NỐ QUÁ LỚN! Dụng cụ chứa đã bị phá hủy!`);
+            addLog('danger', `💥 VỤ NỔ QUÁ LỚN! Dụng cụ chứa đã bị phá hủy!`);
+            // Phát âm thanh vỡ
+            AudioSystem.playShatter();
             // Xóa cốc
             const index = state.workspaceItems.findIndex(it => it.uid === container.uid);
             if (index !== -1) {
@@ -1785,6 +1913,9 @@ function executeReaction(container, reaction) {
     document.body.classList.add('shake'); // Rung nhẹ cảnh báo
     setTimeout(() => document.body.classList.remove('shake'), 400);
 
+    // 🔊 Phát âm thanh cảnh báo mức độ nguy hiểm cao
+    AudioSystem.playAlert(2);
+
     const safetyDict = { 'goggles': 'Kính bảo hộ', 'gloves': 'Găng tay', 'lab-coat': 'Áo Blouse', 'fume-hood': 'Tủ hút khí độc' };
     const translatedMissing = missingSafety.map(s => safetyDict[s] || s);
 
@@ -1806,8 +1937,11 @@ function executeReaction(container, reaction) {
     }
 
     showDanger(titleType, warnMsg, () => {
+      // Dừng cảnh báo khi người dùng đã xác nhận
+      AudioSystem.stopAlert();
       container.isReacting = false;
-      performEffects();
+      // Đợi một chút sau khi tắt cảnh báo mới nổ (tạo độ kịch tính)
+      setTimeout(performEffects, 500);
     }, headerColor);
   } else {
     performEffects();
@@ -1902,6 +2036,13 @@ function renderWorkspaceItem(item) {
   el.dataset.uid = item.uid;
   el.style.left = item.x + 'px';
   el.style.top = item.y + 'px';
+  // Apply scale if set (zoom feature)
+  if (item.scale && item.scale !== 1) {
+    el.style.transformOrigin = 'top left';
+    el.style.setProperty('--item-scale', item.scale);
+  } else {
+    el.style.setProperty('--item-scale', '1');
+  }
 
   const svgFn = SVG_RENDERERS[item.render];
   let svgHtml = '';
@@ -2029,16 +2170,8 @@ function makeDraggable(el, item) {
     el.style.zIndex = '50';
 
     const onMove = (e2) => {
-      const surface = document.getElementById('workspaceSurface');
-      if (!surface) return;
-      const rect = surface.getBoundingClientRect();
-      
       let newX = startLeft + (e2.clientX - startX);
       let newY = startTop + (e2.clientY - startY);
-      
-      // Clamp coordinates (using offsets to keep items mostly contained)
-      newX = Math.max(-10, Math.min(newX, rect.width - 60));
-      newY = Math.max(-10, Math.min(newY, rect.height - 100));
 
       item.x = newX;
       item.y = newY;
@@ -2050,23 +2183,39 @@ function makeDraggable(el, item) {
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
       
-      // Snap inside on drop for strictness
-      const surface = document.getElementById('workspaceSurface');
-      if (surface) {
-        const rect = surface.getBoundingClientRect();
-        item.x = Math.max(10, Math.min(item.x, rect.width - 70));
-        item.y = Math.max(10, Math.min(item.y, rect.height - 100));
-        el.style.left = item.x + 'px';
-        el.style.top = item.y + 'px';
-      }
-
-      // Check if dropped onto another item for interaction
       handleDropInteractions(item);
     };
 
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mouseup', onUp);
   });
+
+  // ——— SCROLL WHEEL ZOOM (All items) ———
+  el.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const delta = e.deltaY < 0 ? 0.1 : -0.1;
+    const oldScale = item.scale || 1.0;
+    const newScale = Math.min(2.0, Math.max(0.5, +(oldScale + delta).toFixed(1)));
+    if (newScale === oldScale) return;
+    item.scale = newScale;
+    
+    // Apply scale via CSS variable for consistency with selection effects
+    el.style.transformOrigin = 'top left';
+    el.style.setProperty('--item-scale', newScale);
+    
+    // Show scale badge
+    let badge = el.querySelector('.scale-badge');
+    if (!badge) {
+      badge = document.createElement('div');
+      badge.className = 'scale-badge';
+      el.appendChild(badge);
+    }
+    badge.textContent = Math.round(newScale * 100) + '%';
+    badge.style.opacity = '1';
+    clearTimeout(el._scaleBadgeTimer);
+    el._scaleBadgeTimer = setTimeout(() => { if(badge) badge.style.opacity = '0'; }, 1200);
+  }, { passive: false });
 }
 
 // Kiểm tra va chạm giữa hai vật thể dựa trên vùng bao (AABB)
@@ -2133,7 +2282,9 @@ function toggleBunsen(item) {
 
   if (item.state === 'on') {
     state.environment = state.environment || {};
-    state.environment.isHeating = true;
+    // Chỉ set flag môi trường nếu cần thiết cho UI chung, 
+    // không dùng làm tham số chính cho phản ứng của cốc
+    state.environment.isHeating = true; 
     addLog('warning', `🔥 Đèn cồn bật — Cẩn thận lửa hở!`);
     const intervalId = setInterval(() => {
       emitFlameParticle(item.x + 28, item.y + 10);
@@ -2173,22 +2324,11 @@ function heatNearbyContainers(bunsen) {
             const beaker = it;
             const env = { ...(state.environment || {}), isHeating: true };
 
-            // 1. Ưu tiên kiểm tra thuốc súng — hiện modal cảnh báo trước khi nổ
+            // 1. Ưu tiên kiểm tra thuốc súng — chỉ nổ nếu đã trộn xong
             if (window.ChemistryEngine) {
               const gp = window.ChemistryEngine.checkGunpowder(beaker.chemicals, env);
-              if (gp && gp.type === 'gunpowder_explosion') {
-                executeReaction(beaker, {
-                  equation: '2KNO₃ + S + 3C → K₂S + N₂↑ + 3CO₂↑',
-                  type: 'explosion',
-                  effect: 'explosion-violent',
-                  observation: '💣 THUỐC SÚNG ĐEN BẮT LỬA! Phản ứng nổ dây chuyền không thể dừng!',
-                  synthesis: { name: '💣 THUỐC SÚNG ĐEN PHÁT NỔ!', icon: '💥', category: 'Vũ khí / Pháo hoa' },
-                  logType: 'danger',
-                  hazardLevel: 3,
-                  hazardType: 'explosion',
-                  shatter: true,
-                  colorChange: { end: '#fbbf24' }
-                });
+              if (gp && gp.type === 'gunpowder_explosion' && beaker._gunpowderMixed) {
+                triggerGunpowderExplosion(beaker, gp);
                 return;
               }
             }
@@ -2370,7 +2510,25 @@ function hideTooltip() {
   document.getElementById('tooltip').classList.remove('visible');
 }
 
-// ——— REACTION MODAL ———
+/**
+ * Kích hoạt hiệu ứng nổ Thuốc súng đen
+ */
+function triggerGunpowderExplosion(beaker, data) {
+  executeReaction(beaker, {
+    equation: data.equation || '2KNO₃ + S + 3C → K₂S + N₂↑ + 3CO₂↑',
+    type: 'explosion',
+    effect: 'explosion-violent',
+    observation: '💣 THUỐC SÚNG ĐEN PHÁT NỔ! Phòng thí nghiệm bị phá hủy!',
+    synthesis: { name: '💣 THUỐC SÚNG ĐEN PHÁT NỔ!', icon: '💥', category: 'Vũ khí / Pháo hoa' },
+    logType: 'danger',
+    hazardLevel: 3,
+    hazardType: 'explosion',
+    shatter: true,
+    colorChange: { end: '#fbbf24' }
+  });
+}
+
+// ——— REACTION EXECUTION ———
 function showReactionModal(reaction) {
   const modal = document.getElementById('modalOverlay');
   const content = document.getElementById('modalContent');
@@ -2773,7 +2931,8 @@ function checkElectrolysis(cell) {
       
       electrodes.forEach(e => {
         const prodColor = e.connectionType === 'positive' ? '#fff' : '#bae6fd';
-        triggerReactionEffect(intensity, e.x + 10, e.y + 60, { color: prodColor });
+        const eScale = e.scale || 1;
+        triggerReactionEffect(intensity, e.x + 10 * eScale, e.y + 60 * eScale, { color: prodColor }, eScale);
       });
     } else {
       addLog('warning', `[CẢNH_BÁO] DỮ LIỆU DÒNG ĐIỆN KHÔNG PHÁT HIỆN ĐỘ DẪN ĐIỆN.`);
@@ -2889,3 +3048,261 @@ document.addEventListener('keydown', (e) => {
 window.addEventListener('resize', () => {
   if (typeof resizeCanvas === 'function') resizeCanvas();
 });
+
+// ——— TOGGLE ALERT SOUND ———
+function toggleAlertSound() {
+  const isMuted = AudioSystem._isMuted;
+  AudioSystem.setMuted(!isMuted);
+
+  const newMuted = AudioSystem._isMuted;
+  const btn = document.getElementById('btnMuteAlert');
+  const iconSound = document.getElementById('iconSound');
+  const iconMute = document.getElementById('iconMute');
+  const lbl = document.getElementById('lblSound');
+
+  if (newMuted) {
+    if (btn) btn.style.background = 'rgba(107,114,128,0.15)';
+    if (btn) btn.style.borderColor = 'rgba(107,114,128,0.4)';
+    if (btn) btn.style.color = '#6b7280';
+    if (iconSound) iconSound.style.display = 'none';
+    if (iconMute) iconMute.style.display = 'inline';
+    if (lbl) lbl.textContent = 'Tắt tiếng';
+    addLog('info', '🔇 Đã tắt âm thanh cảnh báo.');
+  } else {
+    if (btn) btn.style.background = 'rgba(251,191,36,0.15)';
+    if (btn) btn.style.borderColor = 'rgba(251,191,36,0.4)';
+    if (btn) btn.style.color = '#fbbf24';
+    if (iconSound) iconSound.style.display = 'inline';
+    if (iconMute) iconMute.style.display = 'none';
+    if (lbl) lbl.textContent = 'Âm thanh';
+    addLog('info', '🔊 Đã bật âm thanh cảnh báo.');
+    // Test nhanh 0.5s
+    AudioSystem.playAlert(1);
+  }
+}
+window.toggleAlertSound = toggleAlertSound;
+
+// ——— MUSIC SYSTEM ———
+const MusicSystem = {
+  _ctx: null,
+  _gainNode: null,
+  _oscillators: [],
+  _isMuted: false,
+  _isPlaying: false,
+  _currentTrack: 'science',
+  _volume: 0.8,
+  _arpTimer: null,
+  _audioElement: null,
+
+  _tracks: {
+    'science': 'music/science.mp3',
+    'ly_keo_chai': 'music/ly_keo_chai.mp3',
+    'da_lab_album': 'music/da_lab_instrumental.mp3',
+    'son_tung': 'music/son_tung_remix.mp3',
+    'thanh_xuan': 'music/thanh_xuan.mp3',
+    'concentration': 'synthesized'
+  },
+
+  init() {
+    if (this._audioElement) return;
+    try {
+      this._audioElement = new Audio();
+      this._audioElement.loop = true;
+      
+      this._audioElement.onplay = () => addLog('info', '🔊 Nhạc đang phát (Trực tiếp)...');
+      this._audioElement.onerror = (e) => {
+        const error = this._audioElement.error;
+        let msg = 'Lỗi không xác định';
+        if (error) {
+          switch(error.code) {
+            case 1: msg = 'Người dùng hủy'; break;
+            case 2: msg = 'Lỗi file / Mạng'; break;
+            case 3: msg = 'Lỗi giải mã'; break;
+            case 4: msg = 'Không thấy file music/'; break;
+          }
+        }
+        addLog('danger', `❌ Lỗi Audio: ${msg}`);
+      };
+
+      // AudioContext dành cho Drone
+      try {
+        this._ctx = new (window.AudioContext || window.webkitAudioContext)();
+        this._gainNode = this._ctx.createGain();
+        this._gainNode.connect(this._ctx.destination);
+      } catch(e) {}
+    } catch(e) {
+      console.warn('[MusicSystem] Init error:', e);
+    }
+  },
+
+  play(trackId) {
+    this.init();
+    if (this._isPlaying) return;
+    
+    if (trackId) this._currentTrack = trackId;
+    this._isPlaying = true;
+    
+    this._startTrack(this._currentTrack);
+  },
+
+  playNext() {
+    const keys = Object.keys(this._tracks);
+    const available = keys.filter(k => k !== this._currentTrack);
+    const next = available[Math.floor(Math.random() * available.length)];
+    this.play(next);
+  },
+
+  _startTrack(id) {
+    this._stopGenerators();
+    const trackFile = this._tracks[id];
+
+    if (trackFile === 'synthesized' || !trackFile) {
+      if (!this._ctx) return;
+      if (this._ctx.state === 'suspended') this._ctx.resume();
+      this._gainNode.gain.setValueAtTime(this._volume, this._ctx.currentTime);
+      
+      // Classic Drone Mode
+      const freqs = [55, 82.4, 110, 41.2, 164.8];
+      freqs.forEach((freq, i) => {
+        const osc = this._ctx.createOscillator();
+        const g = this._ctx.createGain();
+        osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+        osc.frequency.setValueAtTime(freq, this._ctx.currentTime);
+        const lfo = this._ctx.createOscillator();
+        const lfoGain = this._ctx.createGain();
+        lfo.frequency.value = 0.1 + Math.random() * 0.1;
+        lfoGain.gain.value = 0.5;
+        lfo.connect(lfoGain); lfoGain.connect(osc.frequency);
+        lfo.start();
+        g.gain.value = i === 0 ? 0.6 : 0.3;
+        osc.connect(g); g.connect(this._gainNode);
+        osc.start();
+        this._oscillators.push({ osc, lfo });
+      });
+    } else {
+      // Local MP3 Mode - Phát trực tiếp qua Audio Element để ổn định nhất
+      this._audioElement.src = trackFile;
+      this._audioElement.volume = this._volume;
+      
+      const trackName = id.replace(/_/g, ' ').toUpperCase();
+      addLog('info', `📡 Đang nạp: ${trackName} (${trackFile})...`);
+      
+      this._audioElement.play().catch(err => {
+        if (err.name === 'NotAllowedError') {
+          addLog('warning', '⚠️ Trình duyệt chặn tự động phát. Hãy nhấn vào màn hình!');
+        } else {
+          addLog('danger', `❌ Không thể phát: ${err.message}`);
+        }
+      });
+    }
+  },
+
+  _stopGenerators() {
+    clearTimeout(this._arpTimer);
+    if (this._audioElement) this._audioElement.pause();
+    this._oscillators.forEach(obj => {
+      if (obj.osc) try { obj.osc.stop(); } catch(e) {}
+      if (obj.lfo) try { obj.lfo.stop(); } catch(e) {}
+    });
+    this._oscillators = [];
+  },
+
+  stop() {
+    if (!this._isPlaying) return;
+    this._isPlaying = false;
+    this._stopGenerators();
+  },
+
+  setVolume(v) {
+    this._volume = parseFloat(v);
+    if (this._audioElement) {
+      this._audioElement.volume = this._volume;
+    }
+    if (this._gainNode && this._ctx) {
+      this._gainNode.gain.setTargetAtTime(this._volume, this._ctx.currentTime, 0.1);
+    }
+  }
+};
+
+function initMusicSystem() {
+  MusicSystem.init();
+}
+
+
+
+function toggleMusic() {
+  if (!MusicSystem._ctx) MusicSystem.init();
+  
+  if (MusicSystem._isPlaying) {
+    MusicSystem.stop();
+  } else {
+    // Mỗi lần bật lại sẽ đổi 1 bài ngẫu nhiên
+    MusicSystem.playNext();
+  }
+  
+  const btn = document.getElementById('btnToggleMusic');
+  const lbl = document.getElementById('lblMusic');
+  const sel = document.getElementById('selMusicTrack');
+  const vol = document.getElementById('volumeControl');
+  const iconOn = document.getElementById('iconMusicOn');
+  const iconOff = document.getElementById('iconMusicOff');
+  
+  const isPlaying = MusicSystem._isPlaying;
+  
+  if (btn) {
+    btn.style.background = isPlaying ? 'rgba(52,211,153,0.15)' : 'rgba(107,114,128,0.15)';
+    btn.style.borderColor = isPlaying ? 'rgba(52,211,153,0.4)' : 'rgba(107,114,128,0.3)';
+    btn.style.color = isPlaying ? '#34d399' : '#6b7280';
+  }
+  
+  if (iconOn) iconOn.style.display = isPlaying ? 'inline' : 'none';
+  if (iconOff) iconOff.style.display = isPlaying ? 'none' : 'inline';
+  if (lbl) lbl.textContent = isPlaying ? 'Nhạc: BẬT' : 'Nhạc: TẮT';
+  if (sel) {
+    sel.style.display = isPlaying ? 'inline-block' : 'none';
+    if (isPlaying) sel.value = MusicSystem._currentTrack;
+  }
+  if (vol) vol.style.display = isPlaying ? 'flex' : 'none';
+  
+  addLog('info', isPlaying ? '🎵 Nhạc nền Lab đã bật.' : '🔇 Nhạc nền đã tắt.');
+}
+
+function changeMusicTrack(trackId) {
+  if (MusicSystem._isPlaying) {
+    // Cross-fade track switch
+    MusicSystem.stop();
+    setTimeout(() => MusicSystem.play(trackId), 1000);
+  } else {
+    MusicSystem._currentTrack = trackId;
+  }
+}
+window.toggleMusic = toggleMusic;
+window.changeMusicTrack = changeMusicTrack;
+
+// Update pH widget when container selected
+function updatePHWidget(chemicals) {
+  const widget = document.getElementById('phWidget');
+  if (!widget) return;
+  const ph = window.ChemistryEngine ? window.ChemistryEngine.calculatePH(chemicals || []) : 7.0;
+  const clampedPH = Math.max(0, Math.min(14, ph));
+  const pct = (clampedPH / 14) * 100;
+  const marker = document.getElementById('phMarker');
+  const label = document.getElementById('phValue');
+  
+  if (marker) {
+    marker.style.left = pct + '%';
+    // Dynamically change marker color to match pH
+    const colors = [
+      '#ff1a1a','#ff4d1a','#ff801a','#ffb31a','#ffe61a',
+      '#e6ff1a','#b3ff1a','#66ff1a','#1aff66','#1affb3',
+      '#1affff','#1a80ff','#1a1aff','#801aff','#b31aff'
+    ];
+    const phIdx = Math.round(clampedPH);
+    marker.style.background = colors[phIdx] || '#fff';
+    marker.style.boxShadow = `0 0 10px ${colors[phIdx]}aa, 0 0 2px rgba(0,0,0,0.5)`;
+  }
+  
+  if (label) label.textContent = 'pH ' + (ph === 7 ? '7.0' : ph.toFixed(1));
+  widget.style.opacity = chemicals && chemicals.length > 0 ? '1' : '0.4';
+}
+window.updatePHWidget = updatePHWidget;

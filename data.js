@@ -146,9 +146,9 @@ const CHEMICALS = [
   // ACIDS
   {
     id: 'hcl',
-    formula: 'HCl (đặc)',
-    name: 'Axit Clohidric Đặc',
-    shortName: 'HCl đặc',
+    formula: 'HCl (conc)',
+    name: 'Hydrochloric acid Đặc',
+    shortName: 'HCl conc',
     type: 'acid',
     ph: 1,
     cation: 'H',
@@ -171,9 +171,9 @@ const CHEMICALS = [
   },
   {
     id: 'hcl_dil',
-    formula: 'HCl (loãng)',
-    name: 'Axit Clohidric Loãng',
-    shortName: 'HCl loãng',
+    formula: 'HCl (dil)',
+    name: 'Hydrochloric acid Loãng',
+    shortName: 'HCl dil',
     type: 'acid',
     ph: 1.5,
     cation: 'H',
@@ -195,7 +195,7 @@ const CHEMICALS = [
   {
     id: 'h2so4',
     formula: 'H₂SO₄ (đặc)',
-    name: 'Axit Sunfuric Đặc',
+    name: 'Sulfuric acid Đặc',
     shortName: 'H₂SO₄ đặc',
     type: 'acid',
     ph: 0.5,
@@ -220,7 +220,7 @@ const CHEMICALS = [
   {
     id: 'h2so4_dil',
     formula: 'H₂SO₄ (loãng)',
-    name: 'Axit Sunfuric Loãng',
+    name: 'Sulfuric acid Loãng',
     shortName: 'H₂SO₄ loãng',
     type: 'acid',
     ph: 1.2,
@@ -243,7 +243,7 @@ const CHEMICALS = [
   {
     id: 'hno3',
     formula: 'HNO₃ (đặc)',
-    name: 'Axit Nitric Đặc',
+    name: 'Nitric acid Đặc',
     shortName: 'HNO₃ đặc',
     type: 'acid',
     ph: 0.8,
@@ -267,7 +267,7 @@ const CHEMICALS = [
   {
     id: 'hno3_dil',
     formula: 'HNO₃ (loãng)',
-    name: 'Axit Nitric Loãng',
+    name: 'Nitric acid Loãng',
     shortName: 'HNO₃ loãng',
     type: 'acid',
     ph: 1.5,
@@ -290,7 +290,7 @@ const CHEMICALS = [
   {
     id: 'ch3cooh',
     formula: 'CH₃COOH',
-    name: 'Axit Axetic',
+    name: 'Acetic acid',
     shortName: 'CH₃COOH',
     type: 'acid',
     ph: 3.5,
@@ -312,7 +312,7 @@ const CHEMICALS = [
   {
     id: 'naoh',
     formula: 'NaOH',
-    name: 'Natri Hidroxit',
+    name: 'Sodium hydroxide',
     shortName: 'NaOH',
     type: 'base',
     ph: 14,
@@ -347,7 +347,7 @@ const CHEMICALS = [
   {
     id: 'h2o',
     formula: 'H₂O',
-    name: 'Nước cất',
+    name: 'Distilled water',
     type: 'special',
     ph: 7,
     color: '#f0f9ff',
@@ -361,7 +361,7 @@ const CHEMICALS = [
   {
     id: 'ki',
     formula: 'KI',
-    name: 'Kali Iotua',
+    name: 'Potassium iodide',
     type: 'salt',
     ph: 7,
     cation: 'K',
@@ -376,7 +376,7 @@ const CHEMICALS = [
   {
     id: 'cuso4',
     formula: 'CuSO₄',
-    name: 'Đồng(II) Sunfat',
+    name: 'Copper(II) sulfate',
     type: 'salt',
     ph: 4,
     cation: 'Cu2',
@@ -391,7 +391,7 @@ const CHEMICALS = [
   {
     id: 'ca_oh_2',
     formula: 'Ca(OH)₂',
-    name: 'Canxi Hidroxit',
+    name: 'Calcium hydroxide',
     shortName: 'Ca(OH)₂',
     type: 'base',
     ph: 12.4,
@@ -412,7 +412,7 @@ const CHEMICALS = [
   {
     id: 'nh3',
     formula: 'NH₃',
-    name: 'Amoniac',
+    name: 'Ammonia',
     shortName: 'NH₃',
     type: 'base',
     ph: 11,
@@ -433,7 +433,7 @@ const CHEMICALS = [
   {
     id: 'nacl',
     formula: 'NaCl',
-    name: 'Natri Clorua',
+    name: 'Sodium chloride',
     shortName: 'NaCl',
     type: 'salt',
     ph: 7,
@@ -454,7 +454,7 @@ const CHEMICALS = [
   {
     id: 'agno3',
     formula: 'AgNO₃',
-    name: 'Bạc Nitrat',
+    name: 'Silver nitrate',
     shortName: 'AgNO₃',
     type: 'salt',
     ph: 6,
@@ -475,7 +475,7 @@ const CHEMICALS = [
   {
     id: 'caco3',
     formula: 'CaCO₃',
-    name: 'Canxi Cacbonat',
+    name: 'Calcium carbonate',
     shortName: 'CaCO₃',
     type: 'salt',
     ph: 9.9,
@@ -496,7 +496,7 @@ const CHEMICALS = [
   {
     id: 'na2co3',
     formula: 'Na₂CO₃',
-    name: 'Natri Cacbonat',
+    name: 'Sodium carbonate',
     shortName: 'Na₂CO₃',
     type: 'salt',
     ph: 11.6,
@@ -517,7 +517,7 @@ const CHEMICALS = [
   {
     id: 'cucl2',
     formula: 'CuCl₂',
-    name: 'Đồng(II) Clorua',
+    name: 'Copper(II) chloride',
     shortName: 'CuCl₂',
     type: 'salt',
     ph: 5,
@@ -537,7 +537,7 @@ const CHEMICALS = [
   {
     id: 'fecl3',
     formula: 'FeCl₃',
-    name: 'Sắt(III) Clorua',
+    name: 'Iron(III) chloride',
     shortName: 'FeCl₃',
     type: 'salt',
     ph: 3.5,
@@ -559,7 +559,7 @@ const CHEMICALS = [
   {
     id: 'zn',
     formula: 'Zn',
-    name: 'Kẽm',
+    name: 'Zinc',
     shortName: 'Zn',
     type: 'metal',
     form: 'solid',
@@ -577,7 +577,7 @@ const CHEMICALS = [
   {
     id: 'fe',
     formula: 'Fe',
-    name: 'Sắt',
+    name: 'Iron',
     shortName: 'Fe',
     type: 'metal',
     form: 'solid',
@@ -594,7 +594,7 @@ const CHEMICALS = [
   {
     id: 'cu',
     formula: 'Cu',
-    name: 'Đồng',
+    name: 'Copper',
     shortName: 'Cu',
     type: 'metal',
     form: 'solid',
@@ -632,7 +632,7 @@ const CHEMICALS = [
   {
     id: 'co2_gas',
     formula: 'CO₂',
-    name: 'Cacbon Dioxit',
+    name: 'Carbon dioxide',
     shortName: 'CO₂',
     type: 'gas',
     color: '#e0f2fe',
@@ -649,7 +649,7 @@ const CHEMICALS = [
   {
     id: 'na2o',
     formula: 'Na₂O',
-    name: 'Natri Oxide',
+    name: 'Sodium oxide',
     shortName: 'Na₂O',
     type: 'oxide',
     subtype: 'basic',
@@ -669,7 +669,7 @@ const CHEMICALS = [
   {
     id: 'bao',
     formula: 'BaO',
-    name: 'Bari Oxide',
+    name: 'Barium oxide',
     shortName: 'BaO',
     type: 'oxide',
     subtype: 'basic',
@@ -689,7 +689,7 @@ const CHEMICALS = [
   {
     id: 'mgo',
     formula: 'MgO',
-    name: 'Magie Oxide',
+    name: 'Magnesium oxide',
     shortName: 'MgO',
     type: 'oxide',
     subtype: 'basic',
@@ -709,7 +709,7 @@ const CHEMICALS = [
   {
     id: 'feo',
     formula: 'FeO',
-    name: 'Sắt(II) Oxide',
+    name: 'Iron(II) oxide',
     shortName: 'FeO',
     type: 'oxide',
     subtype: 'basic',
@@ -749,7 +749,7 @@ const CHEMICALS = [
   {
     id: 'na_metal',
     formula: 'Na',
-    name: 'Natri Kim Loại',
+    name: 'Sodium metal',
     shortName: 'Na',
     type: 'metal',
     form: 'solid',
@@ -766,7 +766,7 @@ const CHEMICALS = [
   {
     id: 'mg_metal',
     formula: 'Mg',
-    name: 'Magie Kim Loại',
+    name: 'Magnesium metal',
     shortName: 'Mg',
     type: 'metal',
     form: 'solid',
@@ -783,7 +783,7 @@ const CHEMICALS = [
   {
     id: 'k_metal',
     formula: 'K',
-    name: 'Kali Kim Loại',
+    name: 'Potassium metal',
     shortName: 'K',
     type: 'metal',
     form: 'solid',
@@ -800,7 +800,7 @@ const CHEMICALS = [
   {
     id: 'al',
     formula: 'Al',
-    name: 'Nhôm',
+    name: 'Aluminium',
     shortName: 'Al',
     type: 'metal',
     form: 'solid',
@@ -817,7 +817,7 @@ const CHEMICALS = [
   {
     id: 'o2_gas',
     formula: 'O₂',
-    name: 'Khí Oxy',
+    name: 'Oxygen gas',
     shortName: 'O₂',
     type: 'gas',
     color: '#e0f2fe',
@@ -832,7 +832,7 @@ const CHEMICALS = [
   {
     id: 'carbon',
     formula: 'C',
-    name: 'Carbon (Than chì)',
+    name: 'Carbon (Graphite)',
     shortName: 'C',
     type: 'special',
     form: 'solid',
@@ -883,7 +883,7 @@ const CHEMICALS = [
   {
     id: 'sr_metal',
     formula: 'Sr',
-    name: 'Stronti',
+    name: 'Strontium',
     type: 'metal',
     form: 'solid',
     color: '#d1d5db',
@@ -899,7 +899,7 @@ const CHEMICALS = [
   {
     id: 'pb_metal',
     formula: 'Pb',
-    name: 'Chì Kim Loại',
+    name: 'Lead metal',
     type: 'metal',
     form: 'solid',
     color: '#64748b',
@@ -915,7 +915,7 @@ const CHEMICALS = [
   {
     id: 'mn_metal',
     formula: 'Mn',
-    name: 'Mangan',
+    name: 'Manganese',
     type: 'metal',
     form: 'solid',
     color: '#94a3b8',
@@ -931,7 +931,7 @@ const CHEMICALS = [
   {
     id: 'cr_metal',
     formula: 'Cr',
-    name: 'Crom',
+    name: 'Chromium',
     type: 'metal',
     form: 'solid',
     color: '#94a3b8',
@@ -947,7 +947,7 @@ const CHEMICALS = [
   {
     id: 'hg_metal',
     formula: 'Hg',
-    name: 'Thủy Ngân',
+    name: 'Mercury',
     type: 'metal',
     form: 'liquid',
     color: '#94a3b8',
@@ -964,7 +964,7 @@ const CHEMICALS = [
   {
     id: 'ag_metal',
     formula: 'Ag',
-    name: 'Bạc Kim Loại',
+    name: 'Silver metal',
     type: 'metal',
     form: 'solid',
     color: '#e2e8f0',
@@ -982,7 +982,7 @@ const CHEMICALS = [
   {
     id: 'h2_gas',
     formula: 'H₂',
-    name: 'Khí Hydro',
+    name: 'Hydrogen gas',
     type: 'gas',
     color: '#f0f9ff',
     colorHex: '#e0f2fe',
@@ -997,7 +997,7 @@ const CHEMICALS = [
   {
     id: 'n2_gas',
     formula: 'N₂',
-    name: 'Khí Nitơ',
+    name: 'Nitrogen gas',
     type: 'gas',
     color: '#f8fafc',
     colorHex: '#f1f5f9',
@@ -1012,7 +1012,7 @@ const CHEMICALS = [
   {
     id: 'cl2_gas',
     formula: 'Cl₂',
-    name: 'Khí Clo',
+    name: 'Chlorine gas',
     type: 'gas',
     color: '#dcfce7',
     colorHex: '#bbf7d0',
@@ -1027,7 +1027,7 @@ const CHEMICALS = [
   {
     id: 'br2_liquid',
     formula: 'Br₂',
-    name: 'Brom Lỏng',
+    name: 'Liquid bromine',
     type: 'special',
     form: 'liquid',
     color: '#7c2d12',
@@ -1061,7 +1061,7 @@ const CHEMICALS = [
   {
     id: 's_solid',
     formula: 'S',
-    name: 'Lưu Huỳnh',
+    name: 'Sulfur',
     type: 'nonmetal',
     form: 'solid',
     color: '#fde047',
@@ -1077,7 +1077,7 @@ const CHEMICALS = [
   {
     id: 'ni_metal',
     formula: 'Ni',
-    name: 'Niken',
+    name: 'Nickel',
     type: 'metal',
     form: 'solid',
     color: '#cbd5e1',
@@ -1093,7 +1093,7 @@ const CHEMICALS = [
   {
     id: 'sn_metal',
     formula: 'Sn',
-    name: 'Thiếc',
+    name: 'Tin',
     type: 'metal',
     form: 'solid',
     color: '#e2e8f0',
@@ -1125,7 +1125,7 @@ const CHEMICALS = [
   {
     id: 'pt_metal',
     formula: 'Pt',
-    name: 'Bạch Kim',
+    name: 'Platinum',
     type: 'metal',
     form: 'solid',
     color: '#f1f5f9',
@@ -1141,7 +1141,7 @@ const CHEMICALS = [
   {
     id: 'f2_gas',
     formula: 'F₂',
-    name: 'Khí Flo',
+    name: 'Fluorine gas',
     type: 'gas',
     color: '#fef3c7',
     colorHex: '#fde68a',
@@ -1156,7 +1156,7 @@ const CHEMICALS = [
   {
     id: 'p_red',
     formula: 'P',
-    name: 'Photpho Đỏ',
+    name: 'Red phosphorus',
     type: 'nonmetal',
     form: 'solid',
     color: '#991b1b',
@@ -1175,7 +1175,7 @@ const CHEMICALS = [
   {
     id: 'nan3',
     formula: 'NaN₃',
-    name: 'Natri Azide',
+    name: 'Sodium azide',
     shortName: 'NaN₃',
     type: 'salt',
     ph: 9.5,
@@ -1196,7 +1196,7 @@ const CHEMICALS = [
   {
     id: 'pb_no3_2',
     formula: 'Pb(NO₃)₂',
-    name: 'Chì(II) Nitrat',
+    name: 'Lead(II) nitrate',
     shortName: 'Pb(NO₃)₂',
     type: 'salt',
     ph: 4,
@@ -1217,7 +1217,7 @@ const CHEMICALS = [
   {
     id: 'ki',
     formula: 'KI',
-    name: 'Kali Iodua',
+    name: 'Potassium iodide',
     shortName: 'KI',
     type: 'salt',
     ph: 7,
@@ -1238,7 +1238,7 @@ const CHEMICALS = [
   {
     id: 'feso4',
     formula: 'FeSO₄',
-    name: 'Sắt(II) Sunfat',
+    name: 'Iron(II) sulfate',
     shortName: 'FeSO₄',
     type: 'salt',
     ph: 3.7,
@@ -1258,7 +1258,7 @@ const CHEMICALS = [
   {
     id: 'na2so4',
     formula: 'Na₂SO₄',
-    name: 'Natri Sunfat',
+    name: 'Sodium sulfate',
     shortName: 'Na₂SO₄',
     type: 'salt',
     ph: 7,
@@ -1279,7 +1279,7 @@ const CHEMICALS = [
   {
     id: 'bacl2',
     formula: 'BaCl₂',
-    name: 'Bari Clorua',
+    name: 'Barium chloride',
     shortName: 'BaCl₂',
     type: 'salt',
     ph: 7,
@@ -1300,7 +1300,7 @@ const CHEMICALS = [
   {
     id: 'nahco3',
     formula: 'NaHCO₃',
-    name: 'Natri Hidrocacbonat',
+    name: 'Sodium hydrogencarbonate',
     shortName: 'NaHCO₃',
     type: 'salt',
     ph: 8.3,
@@ -1436,7 +1436,7 @@ const CHEMICALS = [
   {
     id: 'h2_gas',
     formula: 'H₂',
-    name: 'Khí Hydro',
+    name: 'Hydrogen gas',
     shortName: 'H₂',
     type: 'gas',
     color: '#f0f9ff',
@@ -1495,9 +1495,9 @@ const CHEMICALS = [
     shortName: 'Trilinolein',
     type: 'organic',
     subtype: 'lipid',
-    color: '#fde68a',
-    liquidColor: 'rgba(253,230,138,0.4)',
-    colorHex: '#fde68a',
+    color: '#fbbf24',
+    liquidColor: 'rgba(245,158,11,0.5)',
+    colorHex: '#fbbf24',
     hazards: [],
     badges: ['lipid', 'unsaturated'],
     molarMass: 878.37,
@@ -1513,15 +1513,33 @@ const CHEMICALS = [
     shortName: 'Triolein',
     type: 'organic',
     subtype: 'lipid',
-    color: '#d9f99d',
-    liquidColor: 'rgba(217,249,157,0.4)',
-    colorHex: '#d9f99d',
+    color: '#f59e0b',
+    liquidColor: 'rgba(217,119,6,0.45)',
+    colorHex: '#f59e0b',
     hazards: [],
     badges: ['lipid', 'unsaturated'],
     molarMass: 885.44,
     icon: '🫒',
     description: 'Triolein. Dầu thực vật không bão hòa (gốc oleic acid C17, 1 liên kết đôi). Dầu olive chủ yếu là triolein. Hydrogen hóa (3H₂) → Tristearin.',
     reactions: ['naoh', 'h2o', 'h2_gas'],
+    tags: ['general'],
+  },
+  {
+    id: 'cooking_oil',
+    formula: '(RCOO)₃C₃H₅',
+    name: 'Dầu ăn',
+    shortName: 'Dầu ăn',
+    type: 'organic',
+    subtype: 'lipid',
+    color: '#f59e0b',
+    liquidColor: 'rgba(245,158,11,0.5)',
+    colorHex: '#f59e0b',
+    hazards: [],
+    badges: ['lipid'],
+    molarMass: 880.0,
+    icon: '🫙',
+    description: 'Dầu thực vật (Triglyceride). Chất lỏng nhớt màu vàng, không tan trong nước, nhẹ hơn nước. Dùng trong phản ứng xà phòng hóa.',
+    reactions: ['naoh', 'h2o'],
     tags: ['general'],
   },
 
@@ -1541,6 +1559,24 @@ const CHEMICALS = [
     icon: '🌿',
     description: 'Ethylene. Khí alkene chứa liên kết đôi C=C. Phản ứng cộng nước (xúc tác H⁺, nhiệt độ cao) tạo ethanol công nghiệp: C₂H₄ + H₂O → C₂H₅OH.',
     reactions: ['h2o', 'h2_gas'],
+    tags: ['general'],
+  },
+  {
+    id: 'kerosene',
+    formula: 'C₁₀H₂₂-C₁₆H₃₄',
+    name: 'Dầu hỏa',
+    shortName: 'Dầu hỏa',
+    type: 'organic',
+    subtype: 'alkane',
+    color: '#f8fafc',
+    liquidColor: 'rgba(241,245,249,0.3)',
+    colorHex: '#f1f5f9',
+    hazards: ['flammable'],
+    badges: ['organic', 'flammable'],
+    molarMass: 170.0,
+    icon: '⛽',
+    description: 'Dầu hỏa (Kerosene). Hỗn hợp hiđrocacbon lỏng. Không tan trong nước, dùng để bảo quản kim loại kiềm (Na, K) tránh tiếp xúc không khí và ẩm.',
+    reactions: ['o2_gas'],
     tags: ['general'],
   },
   {
@@ -1637,7 +1673,7 @@ const CHEMICALS = [
   {
     id: 'p_red',
     formula: 'P',
-    name: 'Photpho Đỏ',
+    name: 'Red phosphorus',
     shortName: 'Photpho',
     type: 'non-metal',
     form: 'solid',
@@ -1652,7 +1688,7 @@ const CHEMICALS = [
   {
     id: 's_yellow',
     formula: 'S',
-    name: 'Lưu Huỳnh',
+    name: 'Sulfur',
     shortName: 'Lưu huỳnh',
     type: 'non-metal',
     form: 'solid',
@@ -1667,7 +1703,7 @@ const CHEMICALS = [
   {
     id: 'cl2_gas',
     formula: 'Cl₂',
-    name: 'Khí Clo',
+    name: 'Chlorine gas',
     shortName: 'Clo',
     type: 'gas',
     form: 'gas',
@@ -3080,6 +3116,144 @@ const REACTIONS = {
     particles: [{ type: 'precipitate', color: '#000', count: 35 }],
     description: 'H₂S phản ứng với muối đồng tạo CuS đen. Kết tủa này không tan trong axit loãng.',
     observation: '⚫ Kết tủa ĐEN CuS xuất hiện.',
+    hazardLevel: 1, logType: 'success',
+  },
+
+  // === PHỨC CHẤT NH₃ (AMMONIUM COMPLEX) ===
+
+  // Cu(OH)₂ + NH₃ dư → [Cu(NH₃)₄]²⁺ (xanh thẫm đặc trưng)
+  'cu_oh_2+nh3': {
+    reactants: ['cu_oh_2', 'nh3'],
+    products: ['[Cu(NH₃)₄]²⁺', 'OH⁻'],
+    equation: 'Cu(OH)₂↓ + 4NH₃(dư) → [Cu(NH₃)₄]²⁺(xanh thẫm) + 2OH⁻',
+    type: 'complex-formation',
+    effect: 'complex-blue-dark',
+    deltaH: -70,
+    colorChange: { start: 'rgba(29,78,216,0.4)', end: 'rgba(30,58,138,0.95)' },
+    particles: [{ type: 'spark', color: '#1e3a8a', count: 20 }],
+    description: 'NH₃ dư hòa tan kết tủa Cu(OH)₂ tạo phức tetraamine đồng(II) màu xanh thẫm đặc trưng [Cu(NH₃)₄]²⁺.',
+    observation: '🔵→🌑 Kết tủa xanh lam Cu(OH)₂ TAN BIẾN, dung dịch chuyển XANH THẪM ĐẶC TRƯNG của phức đồng-amine!',
+    hazardLevel: 1, logType: 'success',
+    synthesis: { name: 'Phức Tetraamine Đồng(II) [Cu(NH₃)₄]²⁺', icon: '🔵', category: 'Phức chất' },
+  },
+
+  // CuSO₄ + NH₃ → [Cu(NH₃)₄]SO₄
+  'cuso4+nh3': {
+    reactants: ['cuso4', 'nh3'],
+    products: ['[Cu(NH₃)₄]SO₄'],
+    equation: 'CuSO₄ + 4NH₃(dư) → [Cu(NH₃)₄]SO₄(xanh thẫm)',
+    type: 'complex-formation',
+    effect: 'complex-blue-dark',
+    colorChange: { start: 'rgba(59,130,246,0.35)', end: 'rgba(30,58,138,0.95)' },
+    particles: [{ type: 'spark', color: '#1e3a8a', count: 20 }],
+    description: 'Nhỏ từng lượng NH₃: đầu tiên tạo Cu(OH)₂ xanh lam, NH₃ dư tiếp tục tan thành phức xanh thẫm.',
+    observation: '🔵 → 🌑 CuSO₄ xanh nhạt chuyển XaANH THẪM ĐẬM — phức [Cu(NH₃)₄]²⁺ đặc trưng!',
+    hazardLevel: 1, logType: 'success',
+    synthesis: { name: 'Phức [Cu(NH₃)₄]SO₄', icon: '🔵', category: 'Phức chất' },
+  },
+
+  // AgCl + NH₃ → [Ag(NH₃)₂]⁺ (AgCl tan trong NH₃)
+  'agcl+nh3': {
+    reactants: ['agcl', 'nh3'],
+    products: ['[Ag(NH₃)₂]⁺', 'Cl⁻'],
+    equation: 'AgCl↓ + 2NH₃ → [Ag(NH₃)₂]⁺(trong suốt) + Cl⁻',
+    type: 'complex-dissolution',
+    effect: 'dissolve-sediment',
+    colorChange: { end: 'rgba(248,250,252,0.2)' },
+    particles: [{ type: 'spark', color: '#e2e8f0', count: 15 }],
+    description: 'AgCl tan trong NH₃ dư tạo phức diamine bạc [Ag(NH₃)₂]⁺ (thuốc thử Tollens). Khác AgI không tan trong NH₃.',
+    observation: '✨ Kết tủa trắng AgCl TAN BIẾN hoàn toàn trong NH₃! → Phức [Ag(NH₃)₂]⁺ trong suốt.',
+    hazardLevel: 0, logType: 'success',
+    clearPrecipitate: true,
+    synthesis: { name: 'Thuốc thử Tollens [Ag(NH₃)₂]⁺', icon: '🪞', category: 'Phức chất' },
+  },
+
+  // AgNO₃ + NH₃ → [Ag(NH₃)₂]NO₃ (thuốc thử Tollens)
+  'agno3+nh3': {
+    reactants: ['agno3', 'nh3'],
+    products: ['[Ag(NH₃)₂]NO₃'],
+    equation: 'AgNO₃ + 2NH₃(dư) → [Ag(NH₃)₂]NO₃(Tollens reagent)',
+    type: 'complex-formation',
+    effect: 'neutral',
+    colorChange: { end: 'rgba(248,250,252,0.15)' },
+    particles: [{ type: 'spark', color: '#e2e8f0', count: 10 }],
+    description: 'Tạo thuốc thử Tollens — dùng để nhận biết aldehyde qua phản ứng tráng gương.',
+    observation: '✨ Dung dịch trong suốt — Thuốc thử Tollens đã sẵn sàng (AgNO₃ + NH₃ dư).',
+    hazardLevel: 0, logType: 'info',
+    synthesis: { name: 'Thuốc thử Tollens [Ag(NH₃)₂]⁺', icon: '🪞', category: 'Phân tích hữu cơ' },
+  },
+
+  // Zn(OH)₂ + NH₃ → [Zn(NH₃)₄]²⁺
+  'zn_oh_2+nh3': {
+    reactants: ['zn_oh_2', 'nh3'],
+    products: ['[Zn(NH₃)₄]²⁺', 'OH⁻'],
+    equation: 'Zn(OH)₂↓ + 4NH₃(dư) → [Zn(NH₃)₄]²⁺(không màu) + 2OH⁻',
+    type: 'complex-formation',
+    effect: 'dissolve-sediment',
+    colorChange: { end: 'rgba(248,250,252,0.2)' },
+    particles: [{ type: 'spark', color: '#e2e8f0', count: 12 }],
+    description: 'Zn(OH)₂ tan trong NH₃ dư tạo phức tetraamine kẽm không màu. Khác Al(OH)₃ không tan trong NH₃.',
+    observation: '✨ Zn(OH)₂ trắng tan trong NH₃ → phức [Zn(NH₃)₄]²⁺ trong suốt.',
+    hazardLevel: 0, logType: 'success', clearPrecipitate: true,
+  },
+
+  // FeCl₃ + NH₃ → Fe(OH)₃↓ (NH₃ là bazơ yếu, tạo tủa không tan)
+  'fecl3+nh3': {
+    reactants: ['fecl3', 'nh3'],
+    products: ['Fe(OH)₃↓', 'NH₄Cl'],
+    equation: 'FeCl₃ + 3NH₃ + 3H₂O → Fe(OH)₃↓(nâu đỏ) + 3NH₄Cl',
+    type: 'precipitation',
+    effect: 'precipitate-brown',
+    colorChange: { start: 'rgba(234,88,12,0.4)', end: 'rgba(146,64,14,0.7)' },
+    particles: [{ type: 'precipitate', color: '#92400e', count: 35 }],
+    description: 'NH₃ đóng vai trò bazơ yếu tạo kết tủa Fe(OH)₃ nâu đỏ. KHÔNG tan trong NH₃ dư (khác Cu²⁺, Zn²⁺).',
+    observation: '🟤 Kết tủa NÂU ĐỎ Fe(OH)₃ — Fe³⁺ KHÔNG tạo phức với NH₃ (khác Cu²⁺).',
+    hazardLevel: 0, logType: 'success',
+    precipitate: { formula: 'Fe(OH)₃', color: '#92400e' },
+  },
+
+  // === Al₂O₃ LƯỠNG TÍNH ===
+
+  // Al₂O₃ + NaOH → NaAlO₂ + H₂O (tính bazơ của Al₂O₃ tan trong kiềm)
+  'al2o3+naoh': {
+    reactants: ['al2o3', 'naoh'],
+    products: ['NaAlO₂', 'H₂O'],
+    equation: 'Al₂O₃(r) + 2NaOH(đặc) → 2NaAlO₂(sodium aluminate) + H₂O(l)',
+    type: 'oxide-base',
+    effect: 'neutral',
+    colorChange: { end: 'rgba(239,246,255,0.6)' },
+    particles: [{ type: 'spark', color: '#93c5fd', count: 12 }],
+    description: 'Al₂O₃ là oxide LƯỠNG TÍNH — tan được trong dung dịch kiềm đặc NaOH tạo aluminate NaAlO₂.',
+    observation: '✅ Al₂O₃ (trắng) tan trong NaOH đặc → NaAlO₂ (sodium aluminate). Tính LƯỠNG TÍNH của Al!',
+    hazardLevel: 1, logType: 'warning',
+    synthesis: { name: 'Sodium Aluminate (NaAlO₂)', icon: '⚗️', category: 'Oxide lưỡng tính' },
+  },
+
+  // Al₂O₃ + HCl → AlCl₃ + H₂O
+  'al2o3+hcl': {
+    reactants: ['al2o3', 'hcl'],
+    products: ['AlCl₃', 'H₂O'],
+    equation: 'Al₂O₃(r) + 6HCl(dd) → 2AlCl₃(dd) + 3H₂O(l)',
+    type: 'oxide-acid',
+    effect: 'neutral',
+    colorChange: { end: 'rgba(248,250,252,0.4)' },
+    particles: [],
+    description: 'Al₂O₃ lưỡng tính tan trong axit HCl tạo muối AlCl₃ và nước.',
+    observation: '✅ Al₂O₃ (trắng) tan dần trong HCl → AlCl₃ trong suốt.',
+    hazardLevel: 0, logType: 'success',
+  },
+
+  // Al₂O₃ + H₂SO₄ → Al₂(SO₄)₃ + H₂O
+  'al2o3+h2so4': {
+    reactants: ['al2o3', 'h2so4'],
+    products: ['Al₂(SO₄)₃', 'H₂O'],
+    equation: 'Al₂O₃(r) + 3H₂SO₄(dd) → Al₂(SO₄)₃(dd) + 3H₂O(l)',
+    type: 'oxide-acid',
+    effect: 'neutral',
+    colorChange: { end: 'rgba(248,250,252,0.4)' },
+    particles: [],
+    description: 'Al₂O₃ tan trong H₂SO₄ loãng tạo nhôm sulfate.',
+    observation: '✅ Al₂O₃ tan trong H₂SO₄ loãng.',
     hazardLevel: 1, logType: 'success',
   },
 };

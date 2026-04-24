@@ -39,7 +39,7 @@ const ACADEMIC_REACTIONS = {
 
   // Phức [Cu(NH₃)₄]²⁺ - Xanh thẫm rực rỡ
   'cuoh2+nh3': {
-    reactants: ['cu(oh)2', 'nh3'],
+    reactants: ['cuoh2', 'nh3'],
     products: ['[Cu(NH₃)₄](OH)₂'],
     equation: 'Cu(OH)₂ + 4NH₃ → [Cu(NH₃)₄](OH)₂  (Phức tan)',
     type: 'complexation', effect: 'bubbles-fast',
@@ -48,6 +48,34 @@ const ACADEMIC_REACTIONS = {
     colorChange: { end: 'rgba(30,58,138,0.9)' },
     description: 'Kết tủa Cu(OH)₂ màu xanh lam tan trong dung dịch NH₃ dư tạo ra phức chất tan có màu xanh thẫm đặc trưng.',
     observation: '🔵 Kết tủa xanh lam tan dần. 🔷 Hình thành dung dịch màu xanh thẫm rực rỡ.',
+    logType: 'success'
+  },
+
+  // Phức [Ag(NH₃)₂]⁺ - Tan AgCl
+  'agcl+nh3': {
+    reactants: ['agcl', 'nh3'],
+    products: ['[Ag(NH₃)₂]Cl'],
+    equation: 'AgCl + 2NH₃ → [Ag(NH₃)₂]Cl (Phức tan)',
+    type: 'complexation', effect: 'bubbles-light',
+    clearPrecipitate: true,
+    synthesis: { name: 'Hòa tan AgCl trong NH₃', icon: '💎', category: 'Tạo phức' },
+    colorChange: { end: 'rgba(248,250,252,0.4)' },
+    description: 'Bạc clorua kết tủa trắng tan dễ dàng trong dung dịch amoniac dư tạo thành phức chất tan không màu.',
+    observation: '⚪ Kết tủa trắng tan hết thành dung dịch trong suốt.',
+    logType: 'success'
+  },
+
+  // Phức [Zn(NH₃)₄]²⁺ - Tan Zn(OH)₂
+  'znoh2+nh3': {
+    reactants: ['znoh2', 'nh3'],
+    products: ['[Zn(NH₃)₄](OH)₂'],
+    equation: 'Zn(OH)₂ + 4NH₃ → [Zn(NH₃)₄](OH)₂ (Phức tan)',
+    type: 'complexation', effect: 'bubbles-light',
+    clearPrecipitate: true,
+    synthesis: { name: 'Hòa tan Kẽm hydroxide trong NH₃', icon: '⬜', category: 'Tạo phức' },
+    colorChange: { end: 'rgba(248,250,252,0.4)' },
+    description: 'Kẽm hydroxide kết tủa trắng tan trong dung dịch amoniac dư tạo thành phức chất tan không màu.',
+    observation: '⚪ Kết tủa trắng tan hoàn toàn.',
     logType: 'success'
   },
 
@@ -80,9 +108,21 @@ const ACADEMIC_REACTIONS = {
 
   // --- 3. ĐẶC TÍNH LƯỠNG TÍNH (Amphoterism) ---
 
+  // Al2O3 + NaOH → Tan
+  'al2o3+naoh': {
+    reactants: ['al2o3', 'naoh'],
+    products: ['NaAlO₂', 'H₂O'],
+    equation: 'Al₂O₃ + 2NaOH → 2NaAlO₂ + H₂O',
+    type: 'amphoteric-reaction', effect: 'bubbles-light',
+    synthesis: { name: 'Hòa tan nhôm oxit trong kiềm', icon: '⚗️', category: 'Lưỡng tính' },
+    description: 'Nhôm oxit (Alumina) là oxit lưỡng tính, tan được trong dung dịch kiềm mạnh đun nóng.',
+    observation: '⚪ Chất rắn màu trắng tan dần thành dung dịch trong suốt.',
+    logType: 'info'
+  },
+
   // Al(OH)₃ + NaOH dư → Tan
   'aloh3+naoh': {
-    reactants: ['al(oh)3', 'naoh'],
+    reactants: ['aloh3', 'naoh'],
     products: ['NaAlO₂', 'H₂O'],
     equation: 'Al(OH)₃ + NaOH → NaAlO₂ + 2H₂O',
     type: 'amphoteric-dissolution', effect: 'bubbles-light',

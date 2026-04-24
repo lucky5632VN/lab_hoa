@@ -21,7 +21,7 @@ const MEASUREMENT_INSTRUMENTS = [
 // ——— BẢNG NHẬN BIẾT CATION ———
 const CATION_ID = [
   {
-    ion: 'Li⁺', name: 'Liti',
+    ion: 'Li⁺', name: 'Lithium',
     reagent: 'Thử ngọn lửa (dây Pt)',
     observation: 'Ngọn lửa màu đỏ tía (carmine)',
     color: '#dc2626',
@@ -30,7 +30,7 @@ const CATION_ID = [
     precipitateColor: null,
   },
   {
-    ion: 'Na⁺', name: 'Natri',
+    ion: 'Na⁺', name: 'Sodium',
     reagent: 'Thử ngọn lửa',
     observation: 'Ngọn lửa vàng cam chói (đặc trưng nhất)',
     color: '#f59e0b',
@@ -39,7 +39,7 @@ const CATION_ID = [
     precipitateColor: null,
   },
   {
-    ion: 'K⁺', name: 'Kali',
+    ion: 'K⁺', name: 'Potassium',
     reagent: 'Thử ngọn lửa (qua kính cobalt)',
     observation: 'Ngọn lửa tím nhạt',
     color: '#7c3aed',
@@ -57,7 +57,7 @@ const CATION_ID = [
     precipitateColor: null,
   },
   {
-    ion: 'Ba²⁺', name: 'Bari',
+    ion: 'Ba²⁺', name: 'Barium',
     reagent: 'H₂SO₄ loãng hoặc Na₂SO₄',
     observation: 'Kết tủa trắng BaSO₄, không tan trong axit',
     color: '#f8fafc',
@@ -66,7 +66,7 @@ const CATION_ID = [
     precipitateColor: '#e2e8f0',
   },
   {
-    ion: 'Ca²⁺', name: 'Canxi',
+    ion: 'Ca²⁺', name: 'Calcium',
     reagent: 'Na₂CO₃ hoặc (NH₄)₂C₂O₄',
     observation: 'Kết tủa trắng CaCO₃ (tan sủi bọt trong HCl)',
     color: '#f8fafc',
@@ -75,7 +75,7 @@ const CATION_ID = [
     precipitateColor: '#f1f5f9',
   },
   {
-    ion: 'Mg²⁺', name: 'Magie',
+    ion: 'Mg²⁺', name: 'Magnesium',
     reagent: 'NaOH',
     observation: 'Kết tủa trắng vô định hình Mg(OH)₂',
     color: '#f8fafc',
@@ -111,7 +111,7 @@ const CATION_ID = [
     precipitateColor: '#92400e',
   },
   {
-    ion: 'Ag⁺', name: 'Bạc',
+    ion: 'Ag⁺', name: 'Silver',
     reagent: 'HCl hoặc NaCl',
     observation: 'Tủa trắng sữa AgCl, sẫm thành tím nâu ngoài sáng',
     color: '#94a3b8',
@@ -120,7 +120,7 @@ const CATION_ID = [
     precipitateColor: '#e2e8f0',
   },
   {
-    ion: 'Pb²⁺', name: 'Chì',
+    ion: 'Pb²⁺', name: 'Lead',
     reagent: 'H₂S hoặc Na₂S',
     observation: 'Tủa đen PbS',
     color: '#1e293b',
@@ -129,7 +129,7 @@ const CATION_ID = [
     precipitateColor: '#0f172a',
   },
   {
-    ion: 'Al³⁺', name: 'Nhôm',
+    ion: 'Al³⁺', name: 'Aluminium',
     reagent: 'NaOH (từng lượng nhỏ)',
     observation: 'Tủa keo trắng Al(OH)₃, tan khi dư NaOH → AlO₂⁻',
     color: '#f8fafc',
@@ -138,7 +138,7 @@ const CATION_ID = [
     precipitateColor: '#f1f5f9',
   },
   {
-    ion: 'Zn²⁺', name: 'Kẽm',
+    ion: 'Zn²⁺', name: 'Zinc',
     reagent: 'NaOH (từng lượng nhỏ)',
     observation: 'Tủa trắng Zn(OH)₂, tan nhanh khi dư OH⁻ → ZnO₂²⁻',
     color: '#94a3b8',
@@ -156,7 +156,7 @@ const CATION_ID = [
     precipitateColor: '#15803d',
   },
   {
-    ion: 'Cd²⁺', name: 'Cadimi',
+    ion: 'Cd²⁺', name: 'Cadmium',
     reagent: 'H₂S',
     observation: 'Tủa vàng chanh CdS',
     color: '#facc15',
@@ -169,7 +169,7 @@ const CATION_ID = [
 // ——— BẢNG NHẬN BIẾT ANION ———
 const ANION_ID = [
   {
-    ion: 'Cl⁻', name: 'Clorua',
+    ion: 'Cl⁻', name: 'Chloride',
     reagent: 'AgNO₃ (trong HNO₃ loãng)',
     observation: 'Tủa trắng sữa AgCl không tan trong HNO₃',
     color: '#f8fafc',
@@ -178,7 +178,7 @@ const ANION_ID = [
     precipitateColor: '#e2e8f0',
   },
   {
-    ion: 'Br⁻', name: 'Bromua',
+    ion: 'Br⁻', name: 'Bromide',
     reagent: 'AgNO₃',
     observation: 'Tủa vàng nhạt (kem) AgBr',
     color: '#fef3c7',
@@ -187,7 +187,7 @@ const ANION_ID = [
     precipitateColor: '#fde68a',
   },
   {
-    ion: 'I⁻', name: 'Iodua',
+    ion: 'I⁻', name: 'Iodide',
     reagent: 'AgNO₃',
     observation: 'Tủa vàng đậm AgI',
     color: '#eab308',
@@ -196,7 +196,7 @@ const ANION_ID = [
     precipitateColor: '#ca8a04',
   },
   {
-    ion: 'SO₄²⁻', name: 'Sunfat',
+    ion: 'SO₄²⁻', name: 'Sulfate',
     reagent: 'BaCl₂ (trong HCl loãng)',
     observation: 'Tủa trắng BaSO₄, không tan trong axit',
     color: '#f8fafc',
@@ -205,7 +205,7 @@ const ANION_ID = [
     precipitateColor: '#f1f5f9',
   },
   {
-    ion: 'SO₃²⁻', name: 'Sunfit',
+    ion: 'SO₃²⁻', name: 'Sulfite',
     reagent: 'HCl hoặc H₂SO₄ loãng',
     observation: 'Sủi bọt khí SO₂ mùi hắc khét như diêm sinh',
     color: '#fef9c3',
@@ -214,7 +214,7 @@ const ANION_ID = [
     precipitateColor: null,
   },
   {
-    ion: 'CO₃²⁻', name: 'Cacbonat',
+    ion: 'CO₃²⁻', name: 'Carbonate',
     reagent: 'Axit mạnh (HCl)',
     observation: 'Sủi bọt khí CO₂ không màu, không mùi',
     color: '#e0f2fe',
@@ -232,7 +232,7 @@ const ANION_ID = [
     precipitateColor: null,
   },
   {
-    ion: 'S²⁻', name: 'Sunfua',
+    ion: 'S²⁻', name: 'Sulfide',
     reagent: 'Pb(NO₃)₂ hoặc muối Bạc',
     observation: 'Tủa đen PbS hoặc Ag₂S tức thì',
     color: '#0f172a',
@@ -241,7 +241,7 @@ const ANION_ID = [
     precipitateColor: '#000000',
   },
   {
-    ion: 'PO₄³⁻', name: 'Photphat',
+    ion: 'PO₄³⁻', name: 'Phosphate',
     reagent: 'AgNO₃',
     observation: 'Tủa vàng Ag₃PO₄, tan được trong HNO₃',
     color: '#fbbf24',
@@ -250,7 +250,7 @@ const ANION_ID = [
     precipitateColor: '#d97706',
   },
   {
-    ion: 'NO₃⁻', name: 'Nitrat',
+    ion: 'NO₃⁻', name: 'Nitrate',
     reagent: 'Vụn Đồng + H₂SO₄ đặc',
     observation: 'Kim loại tan, khí nâu đỏ NO₂ độc, dung dịch xanh lam',
     color: '#7c3aed',
@@ -312,7 +312,7 @@ const GAS_TESTS = [
   },
   {
     gas: 'NH₃',
-    name: 'Amoniac',
+    name: 'Ammonia',
     color: '#d1fae5',
     smell: 'Không màu, mùi khai xốc đặc trưng',
     test: 'Giấy quỳ đỏ ẩm hóa xanh; khói trắng với axit HCl',
@@ -544,24 +544,24 @@ const NONIONIC_NOMENCLATURE = [
   { formula: 'CO₂', name: 'Cacbon Đioxit (Khí cacbonic)' },
   { formula: 'SO₂', name: 'Lưu huỳnh Đioxit' },
   { formula: 'NH₃', name: 'Amoniac (Nitơ Trihiđrua)' },
-  { formula: 'CH₄', name: 'Metan' },
+  { formula: 'CH₄', name: 'Methane' },
   { formula: 'CCl₄', name: 'Cacbon Tetraclorua' },
   { formula: 'P₂O₅', name: 'Điphotpho Pentoxit' },
   { formula: 'NO₂', name: 'Nitơ Đioxit' },
   { formula: 'HCl', name: 'Hiđro Clorua' },
   { formula: 'H₂S', name: 'Hiđro Sunfua' },
   // ——— TÊN THÔNG DỤNG ———
-  { formula: 'NaHCO₃', name: 'Baking Soda (Thuốc muối)' },
+  { formula: 'NaHCO₃', name: 'Baking soda (Thuốc muối)' },
   { formula: 'Na₂CO₃', name: 'Soda Ash (Sô-đa)' },
-  { formula: 'Ca(OH)₂', name: 'Vôi tôi (Nước vôi trong)' },
-  { formula: 'CaO', name: 'Vôi sống' },
+  { formula: 'Ca(OH)₂', name: 'Slaked lime (Nước vôi trong)' },
+  { formula: 'CaO', name: 'Quicklime (CaO)' },
   { formula: 'CaSO₄.2H₂O', name: 'Thạch cao sống' },
   { formula: 'C₂H₅OH', name: 'Cồn (Ethanol/Rượu etylic)' },
   { formula: 'CH₃COOH', name: 'Giấm ăn (Axit axetic 5%)' },
   { formula: 'C₆H₈O₆', name: 'Vitamin C (Axit ascorbic)' },
   { formula: 'C₉H₈O₄', name: 'Aspirin' },
   { formula: 'C₆H₁₂O₆', name: 'Đường Glucozơ' },
-  { formula: 'NaCl', name: 'Muối ăn' },
+  { formula: 'NaCl', name: 'Table salt (NaCl)' },
 ];
 // ——— AN TOÀN HÓA HỌC (GHS & PPE) ———
 const SAFETY_SIGNS = [
@@ -645,20 +645,20 @@ const CONC_ACID_PROFILES = [
 ];
 // ——— DÃY HOẠT ĐỘNG HÓA HỌC (METAL REACTIVITY SERIES) ———
 const METAL_REACTIVITY = [
-  { symbol: 'K', name: 'Kali', note: 'Phản ứng mãnh liệt với nước lạnh' },
-  { symbol: 'Na', name: 'Natri', note: 'Phản ứng mạnh với nước lạnh' },
-  { symbol: 'Ca', name: 'Canxi', note: 'Phản ứng với nước ở nhiệt độ thường' },
-  { symbol: 'Mg', name: 'Magie', note: 'Phản ứng chậm với nước lạnh, nhanh với nước nóng' },
-  { symbol: 'Al', name: 'Nhôm', note: 'Có lớp oxit bảo vệ, phản ứng với axit mạnh' },
-  { symbol: 'Zn', name: 'Kẽm', note: 'Phản ứng với axit giải phóng H2' },
-  { symbol: 'Fe', name: 'Sắt', note: 'Phản ứng với axit loãng và hơi nước nóng' },
-  { symbol: 'Ni', name: 'Niken', note: 'Phản ứng chậm với axit' },
-  { symbol: 'Sn', name: 'Thiếc', note: 'Phản ứng với axit khi đun nóng' },
-  { symbol: 'Pb', name: 'Chì', note: 'Phản ứng yếu với axit loãng' },
-  { symbol: 'H', name: '(Hidro)', note: 'Mốc so sánh hoạt động hóa học', isDivider: true },
-  { symbol: 'Cu', name: 'Đồng', note: 'Không phản ứng với axit loãng (HCl, H2SO4 loãng)' },
-  { symbol: 'Hg', name: 'Thủy ngân', note: 'Kim loại lỏng, hoạt động yếu' },
-  { symbol: 'Ag', name: 'Bạc', note: 'Kim loại quý, chỉ tan trong axit oxy hóa mạnh' },
-  { symbol: 'Pt', name: 'Bạch kim', note: 'Kim loại rất trơ, chỉ tan trong nước cường toan' },
-  { symbol: 'Au', name: 'Vàng', note: 'Kim loại trơ nhất, không bị oxy hóa trong không khí' },
+  { symbol: 'K', name: 'Potassium', note: 'Phản ứng mãnh liệt với nước lạnh' },
+  { symbol: 'Na', name: 'Sodium', note: 'Phản ứng mạnh với nước lạnh' },
+  { symbol: 'Ca', name: 'Calcium', note: 'Phản ứng với nước ở nhiệt độ thường' },
+  { symbol: 'Mg', name: 'Magnesium', note: 'Phản ứng chậm với nước lạnh, nhanh với nước nóng' },
+  { symbol: 'Al', name: 'Aluminium', note: 'Có lớp oxit bảo vệ, phản ứng với axit mạnh' },
+  { symbol: 'Zn', name: 'Zinc', note: 'Phản ứng với axit giải phóng H2' },
+  { symbol: 'Fe', name: 'Iron', note: 'Phản ứng với axit loãng và hơi nước nóng' },
+  { symbol: 'Ni', name: 'Nickel', note: 'Phản ứng chậm với axit' },
+  { symbol: 'Sn', name: 'Tin', note: 'Phản ứng với axit khi đun nóng' },
+  { symbol: 'Pb', name: 'Lead', note: 'Phản ứng yếu với axit loãng' },
+  { symbol: 'H', name: '(Hydrogen)', note: 'Mốc so sánh hoạt động hóa học', isDivider: true },
+  { symbol: 'Cu', name: 'Copper', note: 'Không phản ứng với axit loãng (HCl, H2SO4 loãng)' },
+  { symbol: 'Hg', name: 'Mercury', note: 'Kim loại lỏng, hoạt động yếu' },
+  { symbol: 'Ag', name: 'Silver', note: 'Kim loại quý, chỉ tan trong axit oxy hóa mạnh' },
+  { symbol: 'Pt', name: 'Platinum', note: 'Kim loại rất trơ, chỉ tan trong nước cường toan' },
+  { symbol: 'Au', name: 'Gold', note: 'Kim loại trơ nhất, không bị oxy hóa trong không khí' },
 ];

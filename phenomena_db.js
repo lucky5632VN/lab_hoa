@@ -118,7 +118,7 @@ window.PHENOMENA_DB = {
     },
     {
       formula: 'BaSO₄',
-      name: 'Bari Sunfat',
+      name: 'Barium sulfate',
       colorName: 'Trắng tinh (White)',
       colorHex: '#f8fafc',
       particleColor: 'rgba(255,255,255,0.9)',
@@ -131,7 +131,7 @@ window.PHENOMENA_DB = {
     },
     {
       formula: 'CaCO₃',
-      name: 'Canxi Cacbonat',
+      name: 'Calcium carbonate',
       colorName: 'Trắng (White)',
       colorHex: '#f1f5f9',
       particleColor: 'rgba(241,245,249,0.85)',

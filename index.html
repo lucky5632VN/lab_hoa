@@ -102,6 +102,48 @@
       <!-- Removed experiment-tabs -->
     </div>
     <div class="header-right" id="headerControls" style="display:none; align-items:center; gap: 12px;">
+      <!-- 🎵 Nút nhạc nền -->
+      <div class="music-controller-group" style="display:flex; align-items:center; gap:8px;">
+        <button id="btnToggleMusic" onclick="toggleMusic()" title="Bật/Tắt nhạc nền lab"
+          style="display:flex; align-items:center; gap:6px; background:rgba(52,211,153,0.15); border:1px solid rgba(52,211,153,0.4); border-radius:8px; color:#34d399; padding:6px 12px; cursor:pointer; font-size:12px; transition:all 0.2s;">
+          <svg id="iconMusicOn" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2">
+            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+          </svg>
+          <svg id="iconMusicOff" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" style="display:none;">
+            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><line x1="2" y1="2" x2="22" y2="22" stroke="#6b7280"/>
+          </svg>
+          <span id="lblMusic">Nhạc: TẮT</span>
+        </button>
+        
+        <select id="selMusicTrack" onchange="changeMusicTrack(this.value)" class="music-track-select" style="display:none; width: 140px;">
+          <option value="science">🔬 Science is Everywhere</option>
+          <option value="ly_keo_chai">🛶 Lý Kéo Chài (Remix)</option>
+          <option value="da_lab_album">🧪 Da LAB Instrumental</option>
+          <option value="son_tung">🔥 Có Chắc Yêu Là Đây</option>
+          <option value="thanh_xuan">✨ Thanh Xuân (Miss Universe)</option>
+          <option value="concentration">🧬 Ambient Drone</option>
+        </select>
+        
+        <div id="volumeControl" style="display:none; align-items:center; gap:6px; background:rgba(255,255,255,0.05); padding:4px 10px; border-radius:20px; border:1px solid rgba(255,255,255,0.1);">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          <input type="range" id="rngVolume" min="0" max="1" step="0.05" value="0.8" oninput="MusicSystem.setVolume(this.value)" style="width:60px; height:4px; cursor:pointer; accent-color:#34d399;">
+        </div>
+      </div>
+      <!-- 🔊 Nút Tắt/Bật âm thanh cảnh báo -->
+      <button id="btnMuteAlert" onclick="toggleAlertSound()" title="Tắt/Bật âm thanh cảnh báo"
+        style="display:flex; align-items:center; gap:6px; background:rgba(251,191,36,0.15); border:1px solid rgba(251,191,36,0.4); border-radius:8px; color:#fbbf24; padding:6px 12px; cursor:pointer; font-size:12px; transition:all 0.2s;">
+        <svg id="iconSound" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        </svg>
+        <svg id="iconMute" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          <line x1="22" y1="9" x2="16" y2="15"/>
+          <line x1="16" y1="9" x2="22" y2="15"/>
+        </svg>
+        <span id="lblSound">Âm thanh</span>
+      </button>
       <button class="btn-reset" onclick="resetLab()" style="display:flex; align-items:center; gap: 6px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
         Đặt lại
@@ -112,6 +154,7 @@
       </button>
     </div>
   </header>
+
 
   <!-- Main Layout -->
   <main class="lab-main">
@@ -165,7 +208,6 @@
     <section class="workspace" id="workspace">
       <div class="workspace-surface" id="workspaceSurface">
       <!-- Background Technical Overlays -->
-      <div class="workspace-scanner"></div>
       <div class="lab-id-watermark">HỆ THỐNG QUANTUMLAB // PHÒNG THÍ NGHIỆM TỔ 2</div>
       
       <canvas id="effectsCanvas"></canvas>
@@ -202,6 +244,20 @@
         <div class="log-entries" id="logEntries"></div>
       </div>
     </section>
+
+    <!-- pH Universal Indicator Strip (floating) -->
+    <div id="phWidget" class="ph-strip-widget" style="opacity:0.4; transition:opacity 0.4s;">
+      <div class="ph-strip-label">🧪 pH</div>
+      <div class="ph-strip-track">
+        <!-- gradient: red(0)→orange(2)→yellow(4)→green(7)→teal(9)→blue(11)→violet(14) -->
+        <div class="ph-strip-gradient"></div>
+        <div id="phMarker" class="ph-strip-marker" style="left:50%;"></div>
+        <div class="ph-strip-ticks">
+          <span>0</span><span>2</span><span>4</span><span>6</span><span>7</span><span>8</span><span>10</span><span>12</span><span>14</span>
+        </div>
+      </div>
+      <div id="phValue" class="ph-strip-value">pH 7.0</div>
+    </div>
   </main>
   <script>
     function switchDockTab(tabId) {
@@ -308,7 +364,81 @@
         </div>
       </div>
 
-      <button id="btnEnterLab" class="btn-enter-lab" disabled onclick="enterLab()">VÀO PHÒNG THÍ NGHIỆM</button>
+      <button id="btnEnterLab" class="btn-enter-lab" disabled onclick="enterLab(); MusicSystem && MusicSystem.play()">VÀO PHÒNG THÍ NGHIỆM</button>
+    </div>
+  </div>
+
+  <!-- Lab Rules Modal (shown BEFORE safety gear) -->
+  <div class="lab-rules-modal" id="labRulesModal">
+    <div class="lab-rules-box">
+      <div class="lab-rules-header">
+        <div class="lab-rules-icon">🔬</div>
+        <div>
+          <h2 class="lab-rules-title">PHÒNG THÍ NGHIỆM HÓA HỌC</h2>
+          <p class="lab-rules-subtitle">— QUY TẮC AN TOÀN —</p>
+        </div>
+      </div>
+      <div class="lab-rules-grid">
+        <div class="lab-rule-card">
+          <div class="rule-num">1</div>
+          <div class="rule-icon">🪟</div>
+          <div class="rule-text"><strong>Thông thoáng</strong><br/>Đảm bảo phòng thí nghiệm luôn được thông gió tốt trước khi vào làm việc.</div>
+        </div>
+        <div class="lab-rule-card">
+          <div class="rule-num">2</div>
+          <div class="rule-icon">📖</div>
+          <div class="rule-text"><strong>Đọc trước</strong><br/>Đọc kỹ hướng dẫn thí nghiệm và nhãn hóa chất trước khi thực hiện.</div>
+        </div>
+        <div class="lab-rule-card">
+          <div class="rule-num">3</div>
+          <div class="rule-icon">🥼</div>
+          <div class="rule-text"><strong>Mặc bảo hộ</strong><br/>Mặc đầy đủ trang phục bảo hộ: áo blouse, kính, găng tay trước khi vào lab.</div>
+        </div>
+        <div class="lab-rule-card">
+          <div class="rule-num">4</div>
+          <div class="rule-icon">📋</div>
+          <div class="rule-text"><strong>Làm theo hướng dẫn</strong><br/>Chỉ thực hiện đúng theo quy trình đã được giáo viên phê duyệt.</div>
+        </div>
+        <div class="lab-rule-card">
+          <div class="rule-num">5</div>
+          <div class="rule-icon">👁️</div>
+          <div class="rule-text"><strong>Giám sát liên tục</strong><br/>Không để phản ứng đang diễn ra mà không có người giám sát.</div>
+        </div>
+        <div class="lab-rule-card">
+          <div class="rule-num">6</div>
+          <div class="rule-icon">🚫</div>
+          <div class="rule-text"><strong>Không ăn / uống</strong><br/>Tuyệt đối không ăn uống trong phòng thí nghiệm bất kỳ lúc nào.</div>
+        </div>
+        <div class="lab-rule-card">
+          <div class="rule-num">7</div>
+          <div class="rule-icon">⚠️</div>
+          <div class="rule-text"><strong>Hãy cẩn thận</strong><br/>Làm việc cẩn thận, tránh đổ vỡ. Báo ngay cho GV nếu xảy ra tai nạn.</div>
+        </div>
+        <div class="lab-rule-card">
+          <div class="rule-num">8</div>
+          <div class="rule-icon">🙅</div>
+          <div class="rule-text"><strong>Không ngửi / nếm</strong><br/>Tuyệt đối không ngửi trực tiếp hay nếm thử bất kỳ hóa chất nào.</div>
+        </div>
+        <div class="lab-rule-card">
+          <div class="rule-num">9</div>
+          <div class="rule-icon">🧹</div>
+          <div class="rule-text"><strong>Dọn dẹp sạch sẽ</strong><br/>Dọn dẹp dụng cụ, bàn làm việc sạch sẽ sau khi thí nghiệm kết thúc.</div>
+        </div>
+        <div class="lab-rule-card">
+          <div class="rule-num">10</div>
+          <div class="rule-icon">♻️</div>
+          <div class="rule-text"><strong>Xử lý chất thải</strong><br/>Phân loại và xử lý chất thải đúng cách: hóa học, thủy tinh, rác chung.</div>
+        </div>
+        <div class="lab-rule-card" style="grid-column: span 2; background: linear-gradient(135deg,rgba(220,38,38,0.15),rgba(239,68,68,0.08));">
+          <div class="rule-num" style="background:#dc2626;">11</div>
+          <div class="rule-icon">🧯</div>
+          <div class="rule-text"><strong>Biết vị trí thiết bị an toàn</strong><br/>Nhớ vị trí bình cứu hỏa, hộp sơ cứu, lối thoát hiểm và trạm rửa mắt khẩn cấp.</div>
+        </div>
+      </div>
+      <div class="lab-rules-footer">
+        <div class="rules-warning">⚠️ Vi phạm nội quy có thể gây nguy hiểm đến tính mạng bản thân và người xung quanh.</div>
+        <button class="btn-confirm-rules" onclick="confirmLabRules()">✅ Tôi đã đọc và cam kết tuân thủ toàn bộ nội quy</button>
+      </div>
     </div>
   </div>
 

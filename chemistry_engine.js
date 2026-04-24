@@ -123,8 +123,17 @@ const ChemistryEngine = {
         // Tra cứu Ksp từ database mới
         const pKsp = chemicals[j].physical?.pKsp?.[c];
         if (pKsp !== undefined && pKsp !== null) {
+          // --- NÂNG CAO: TÍNH LƯỠNG TÍNH (AMPHOTERISM) ---
+          // Nếu pH > 12.5 (dư kiềm mạnh), các kết tủa Al(OH)3, Zn(OH)2, Cr(OH)3 sẽ tan
+          const ph = this.calculatePH(chemicals);
+          if (ph > 12.5) {
+            if (a === 'OH' && (c === 'Al' || c === 'Zn' || c === 'Cr3' || c === 'Pb2')) {
+              continue; // Không tạo tủa (tủa tan)
+            }
+          }
+
           // Giả định Q > Ksp trong phòng thí nghiệm (nồng độ đủ lớn)
-          return window.PHENOMENA_DB.getPrecipitateColor(c, a);
+          return window.PHENOMENA_DB ? window.PHENOMENA_DB.getPrecipitateColor(c, a) : null;
         }
       }
     }
@@ -177,6 +186,16 @@ const ChemistryEngine = {
           if (ph < 4) return 'rgba(224, 242, 254, 0.1)';   // Mn²⁺ (Axit: Không màu)
           if (ph >= 4 && ph <= 8.5) return 'rgba(120, 113, 108, 0.6)'; // MnO₂ (Trung tính: Nâu đen)
           if (ph > 8.5) return 'rgba(22, 163, 74, 0.6)';   // MnO₄²⁻ (Kiềm: Xanh lục)
+        }
+
+        // D. Phức Sắt(III) Thioxyanat Fe(SCN)₃ (Đỏ máu)
+        if (chem.cation === 'Fe3' && chemicals.find(c => c.anion === 'SCN')) {
+          return 'rgba(153, 27, 27, 0.9)'; 
+        }
+
+        // E. Ion Crômite CrO₂⁻ (Xanh lục - hình thành khi Cr(OH)₃ tan trong kiềm dư)
+        if (chem.cation === 'Cr3' && ph > 12.5) {
+          return 'rgba(21, 128, 61, 0.7)';
         }
 
         if (ionColor !== 'rgba(241, 245, 249, 0.35)') return ionColor;
@@ -401,7 +420,8 @@ const ChemistryEngine = {
           let missingLabel = [];
           if (needsHeat) missingLabel.push('Nhiệt độ (t°)');
           if (needsCatalyst) {
-            const cat = window.CHEMICALS.find(c => c.id === catalystId);
+            const cat = (window.CHEMICALS || []).find(c => c.id === catalystId) || 
+                        (window.ALL_ITEMS || []).find(c => c.id === catalystId);
             missingLabel.push(cat ? cat.name : catalystId);
           }
           
@@ -413,7 +433,7 @@ const ChemistryEngine = {
         } else {
            // Nếu đủ điều kiện, trả về phản ứng thật (nếu là synthesis)
            // Tìm key của phản ứng này trong HEAT_REACTIONS
-           const rKey = Object.keys(window.HEAT_REACTIONS).find(k => window.HEAT_REACTIONS[k] === r);
+           const rKey = Object.keys(window.HEAT_REACTIONS || {}).find(k => window.HEAT_REACTIONS[k] === r);
            return { type: 'synthesis', key: rKey, message: r.observation || 'Đang xảy ra phản ứng...' };
         }
       }
