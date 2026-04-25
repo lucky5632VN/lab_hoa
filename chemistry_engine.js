@@ -14,7 +14,7 @@ const ChemistryEngine = {
   calculatePH(chemicals) {
     if (!chemicals || chemicals.length === 0) return 7.0;
 
-    // Lọc ra các axit và bazơ mạnh/yếu
+    // Lọc ra các acid và base mạnh/yếu
     const acids = chemicals.filter(c => c.type === 'acid');
     const bases = chemicals.filter(c => c.type === 'base' || (c.type === 'oxide' && c.subtype === 'basic'));
 
@@ -22,7 +22,7 @@ const ChemistryEngine = {
     const strongAcid = acids.find(c => c.physical?.pKa < 0);
     const strongBase = bases.find(c => (c.physical?.pKa > 14 || (c.ph && c.ph > 12)));
 
-    // Nếu có cả axit mạnh và bazơ mạnh -> Trung hòa (giả định mol bằng nhau nếu nồng độ bằng nhau)
+    // Nếu có cả acid mạnh và base mạnh -> Trung hòa (giả định mol bằng nhau nếu nồng độ bằng nhau)
     if (strongAcid && strongBase) return 7.0;
 
     if (strongAcid) {
@@ -183,7 +183,7 @@ const ChemistryEngine = {
 
         // C. Trạng thái KMnO₄ (MnO₄⁻) dựa trên môi trường pH
         if (chem.id === 'kmno4') {
-          if (ph < 4) return 'rgba(224, 242, 254, 0.1)';   // Mn²⁺ (Axit: Không màu)
+          if (ph < 4) return 'rgba(224, 242, 254, 0.1)';   // Mn²⁺ (Acid: Không màu)
           if (ph >= 4 && ph <= 8.5) return 'rgba(120, 113, 108, 0.6)'; // MnO₂ (Trung tính: Nâu đen)
           if (ph > 8.5) return 'rgba(22, 163, 74, 0.6)';   // MnO₄²⁻ (Kiềm: Xanh lục)
         }

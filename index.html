@@ -186,8 +186,8 @@
             <input type="text" id="chemSearch" class="dock-search" placeholder="Tìm tên/công thức..." oninput="filterChemicals(this.value)" />
             <div class="chem-filter-tabs horizontal-scroll-tabs" id="chemFilterTabs">
               <button class="chem-filter-btn active" data-type="all" onclick="filterByType('all')">Tất cả</button>
-              <button class="chem-filter-btn" data-type="acid" onclick="filterByType('acid')">Axit</button>
-              <button class="chem-filter-btn" data-type="base" onclick="filterByType('base')">Bazơ</button>
+              <button class="chem-filter-btn" data-type="acid" onclick="filterByType('acid')">Acid</button>
+              <button class="chem-filter-btn" data-type="base" onclick="filterByType('base')">Base</button>
               <button class="chem-filter-btn" data-type="salt" onclick="filterByType('salt')">Muối</button>
               <button class="chem-filter-btn" data-type="oxide" onclick="filterByType('oxide')">Oxide</button>
               <button class="chem-filter-btn" data-type="metal" onclick="filterByType('metal')">Kim loại</button>
@@ -364,7 +364,7 @@
         </div>
       </div>
 
-      <button id="btnEnterLab" class="btn-enter-lab" disabled onclick="enterLab(); MusicSystem && MusicSystem.play()">VÀO PHÒNG THÍ NGHIỆM</button>
+      <button id="btnEnterLab" class="btn-enter-lab" disabled onclick="enterLab()">VÀO PHÒNG THÍ NGHIỆM</button>
     </div>
   </div>
 

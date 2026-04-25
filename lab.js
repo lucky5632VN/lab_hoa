@@ -964,7 +964,7 @@ function renderChemicals(filter = '') {
     
     // Icon mapping for chemistry types
     const typeLabelMap = {
-      'acid': 'Axit', 'base': 'Bazơ', 'salt': 'Muối', 'oxide': 'Oxit', 
+      'acid': 'Acid', 'base': 'Base', 'salt': 'Muối', 'oxide': 'Oxit', 
       'metal': 'Kim loại', 'nonmetal': 'Phi kim', 'organic': 'Hữu cơ', 
       'gas': 'Chất khí', 'special': 'Đặc biệt', 'indicator': 'Chỉ thị'
     };
@@ -1363,11 +1363,11 @@ function checkLitmusInContainer(container, addedChem) {
       if (ph < 6.5) { // Acid range
         if (litmus.litmusState === 'red') return;
         litmus.litmusState = 'red';
-        addLog('warning', `🔴 Quỳ chuyển ĐỎ — Môi trường AXIT (pH ≈ ${ph.toFixed(1)})`);
+        addLog('warning', `🔴 Quỳ chuyển ĐỎ — Môi trường ACID (pH ≈ ${ph.toFixed(1)})`);
       } else if (ph > 7.5) { // Base range
         if (litmus.litmusState === 'blue') return;
         litmus.litmusState = 'blue';
-        addLog('success', `🔵 Quỳ chuyển XANH — Môi trường BAZƠ (pH ≈ ${ph.toFixed(1)})`);
+        addLog('success', `🔵 Quỳ chuyển XANH — Môi trường BASE (pH ≈ ${ph.toFixed(1)})`);
       } else { // Neutral range
         if (litmus.litmusState === 'purple') return;
         litmus.litmusState = 'purple';
@@ -1929,7 +1929,7 @@ function executeReaction(container, reaction) {
         titleType = '☠️ NGUY HIỂM: KHÍ ĐỘC CHẾT NGƯỜI!';
         headerColor = '#9333ea'; // Purple for toxic
     } else if (reaction.hazardType === 'burn' || reaction.effect === 'acid-splatter') {
-        titleType = '🔥 CẢNH BÁO: BỎNG HÓA CHẤT / VĂNG BẮN AXIT!';
+        titleType = '🔥 CẢNH BÁO: BỎNG HÓA CHẤT / VĂNG BẮN ACID!';
         headerColor = '#ea580c'; // Orange for burn
     } else if (reaction.hazardType === 'explosion' || reaction.effect?.includes('explosion') || reaction.shatter) {
         titleType = '⚠️ CẢNH BÁO: NGUY CƠ CHÁY NỔ LỚN!';
@@ -2557,9 +2557,9 @@ function showReactionModal(reaction) {
 
 function getReactionTypeName(type) {
   const map = {
-    'neutralization': 'Trung hòa (Axit + Bazơ)',
-    'acid-carbonate': 'Axit + Cacbonat → CO₂',
-    'metal-acid': 'Kim loại + Axit',
+    'neutralization': 'Trung hòa (Acid + Base)',
+    'acid-carbonate': 'Acid + Cacbonat → CO₂',
+    'metal-acid': 'Kim loại + Acid',
     'precipitation': 'Tạo kết tủa',
     'indicator': 'Chỉ thị màu',
     'redox': 'Oxy hóa khử',

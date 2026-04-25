@@ -65,7 +65,7 @@ const SYNTHESIS_DATA = [
     description: "Sản xuất các hóa chất công nghiệp trọng tâm.",
     methods: [
       { 
-        name: "Axit Sunfuric (H2SO4)", 
+        name: "Acid Sunfuric (H2SO4)", 
         detail: "Phương pháp tiếp xúc (3 giai đoạn).",
         eq: "2SO2 + O2 --(V2O5, to)--> 2SO3" 
       },

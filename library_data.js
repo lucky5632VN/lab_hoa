@@ -59,7 +59,7 @@ const CATION_ID = [
   {
     ion: 'Ba²⁺', name: 'Barium',
     reagent: 'H₂SO₄ loãng hoặc Na₂SO₄',
-    observation: 'Kết tủa trắng BaSO₄, không tan trong axit',
+    observation: 'Kết tủa trắng BaSO₄, không tan trong acid',
     color: '#f8fafc',
     equation: 'Ba²⁺ + SO₄²⁻ → BaSO₄↓',
     note: 'BaSO₄ bền vững nhất trong các sunfat kết tủa',
@@ -134,7 +134,7 @@ const CATION_ID = [
     observation: 'Tủa keo trắng Al(OH)₃, tan khi dư NaOH → AlO₂⁻',
     color: '#f8fafc',
     equation: 'Al³⁺ + 3OH⁻ → Al(OH)₃↓\nAl(OH)₃ + OH⁻ → AlO₂⁻ + 2H₂O',
-    note: 'Tính lưỡng tính: tan cả trong axit và kiềm mạnh',
+    note: 'Tính lưỡng tính: tan cả trong acid và kiềm mạnh',
     precipitateColor: '#f1f5f9',
   },
   {
@@ -183,7 +183,7 @@ const ANION_ID = [
     observation: 'Tủa vàng nhạt (kem) AgBr',
     color: '#fef3c7',
     equation: 'Ag⁺ + Br⁻ → AgBr↓',
-    note: 'AgBr tan chậm trong amoniac đặc, không tan trong axit nitơric',
+    note: 'AgBr tan chậm trong amoniac đặc, không tan trong acid nitơric',
     precipitateColor: '#fde68a',
   },
   {
@@ -198,7 +198,7 @@ const ANION_ID = [
   {
     ion: 'SO₄²⁻', name: 'Sulfate',
     reagent: 'BaCl₂ (trong HCl loãng)',
-    observation: 'Tủa trắng BaSO₄, không tan trong axit',
+    observation: 'Tủa trắng BaSO₄, không tan trong acid',
     color: '#f8fafc',
     equation: 'Ba²⁺ + SO₄²⁻ → BaSO₄↓',
     note: 'Kết tủa bền vững nhất, dùng định lượng sunfat',
@@ -215,7 +215,7 @@ const ANION_ID = [
   },
   {
     ion: 'CO₃²⁻', name: 'Carbonate',
-    reagent: 'Axit mạnh (HCl)',
+    reagent: 'Acid mạnh (HCl)',
     observation: 'Sủi bọt khí CO₂ không màu, không mùi',
     color: '#e0f2fe',
     equation: 'CO₃²⁻ + 2H⁺ → CO₂↑ + H₂O',
@@ -224,7 +224,7 @@ const ANION_ID = [
   },
   {
     ion: 'HCO₃⁻', name: 'Hiđrocacbonat',
-    reagent: 'Axit mạnh (HCl)',
+    reagent: 'Acid mạnh (HCl)',
     observation: 'Sủi bọt nhẹ CO₂',
     color: '#e0f2fe',
     equation: 'HCO₃⁻ + H⁺ → CO₂↑ + H₂O',
@@ -237,7 +237,7 @@ const ANION_ID = [
     observation: 'Tủa đen PbS hoặc Ag₂S tức thì',
     color: '#0f172a',
     equation: 'Pb²⁺ + S²⁻ → PbS↓',
-    note: 'Trong môi trường axit giải phóng khí mùi trứng thối',
+    note: 'Trong môi trường acid giải phóng khí mùi trứng thối',
     precipitateColor: '#000000',
   },
   {
@@ -270,7 +270,7 @@ const GAS_TESTS = [
     test: 'Đưa tàn đốm đang cháy vào miệng ống — tiếng nổ "pop" dứt khoát',
     mechanism: 'H₂ kết hợp O₂ bùng cháy tạo nước',
     equation: '2H₂ + O₂ → 2H₂O',
-    produce: 'Kẽm tác dụng axit: Zn + 2HCl → ZnCl₂ + H₂↑',
+    produce: 'Kẽm tác dụng acid: Zn + 2HCl → ZnCl₂ + H₂↑',
     safety: 'Nguy cơ nổ cao nếu nồng độ tập trung lớn',
     icon: '💥',
   },
@@ -294,7 +294,7 @@ const GAS_TESTS = [
     test: 'Dập tắt que đốm đang cháy. Sục vào Ca(OH)₂ vẩn đục',
     mechanism: 'Khí không duy trì sự cháy; phản ứng tạo canxi cacbonat',
     equation: 'CO₂ + Ca(OH)₂ → CaCO₃↓ + H₂O',
-    produce: 'Đá vôi + Axit: CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂↑',
+    produce: 'Đá vôi + Acid: CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂↑',
     safety: 'Gây ngạt nếu nồng độ cao trong không gian hẹp',
     icon: '🌫️',
   },
@@ -315,8 +315,8 @@ const GAS_TESTS = [
     name: 'Ammonia',
     color: '#d1fae5',
     smell: 'Không màu, mùi khai xốc đặc trưng',
-    test: 'Giấy quỳ đỏ ẩm hóa xanh; khói trắng với axit HCl',
-    mechanism: 'Tính bazơ yếu làm đổi màu chỉ thị',
+    test: 'Giấy quỳ đỏ ẩm hóa xanh; khói trắng với acid HCl',
+    mechanism: 'Tính base yếu làm đổi màu chỉ thị',
     equation: 'NH₃ + HCl → NH₄Cl (khói trắng)',
     produce: 'Muối amôni + Kiềm đun nóng',
     safety: 'Gây kích ứng mạnh, dùng tủ hút',
@@ -330,8 +330,8 @@ const GAS_TESTS = [
     test: 'Làm mất màu dung dịch Brôm hoặc thuốc tím',
     mechanism: 'Tính khử mạnh khử halogen hoặc mangan',
     equation: 'SO₂ + Br₂ + 2H₂O → H₂SO₄ + 2HBr',
-    produce: 'Na₂SO₃ + Axit loãng',
-    safety: 'Độc, gây mưa axit và kích ứng hô hấp',
+    produce: 'Na₂SO₃ + Acid loãng',
+    safety: 'Độc, gây mưa acid và kích ứng hô hấp',
     icon: '🌫️',
   },
 ];
@@ -394,7 +394,7 @@ const AMPHOTERIC_COMPOUNDS = [
     formula: 'NaHCO₃', name: 'Natri hiđrocacbonat',
     withAcid: 'NaHCO₃ + HCl → NaCl + H₂O + CO₂↑',
     withBase: 'NaHCO₃ + NaOH → Na₂CO₃ + H₂O',
-    note: 'Muối axit nhưng có tính lưỡng tính yếu, dùng làm bột nở.',
+    note: 'Muối acid nhưng có tính lưỡng tính yếu, dùng làm bột nở.',
   },
 ];
 
@@ -429,7 +429,7 @@ const ORGANIC_REACTIONS = [
     category: 'Anken — Cộng Nước',
     title: 'Hiđrat hóa Etilen',
     application: 'Sản xuất Etanol cho công nghiệp dược phẩm và nhiên liệu sinh học.',
-    conditions: 'Axit H2SO4 loãng, t°',
+    conditions: 'Acid H2SO4 loãng, t°',
     steps: [
       { 
         label: 'CH2=CH2 + H2O', 
@@ -529,7 +529,7 @@ const THERMAL_DECOMP_LIST = [
       {
         temp: 'Nhiệt độ thấp',
         equation: 'Cu(OH)2 → CuO + H2O',
-        type: 'Phân hủy bazơ không tan',
+        type: 'Phân hủy base không tan',
         note: 'Kết tủa xanh lơ chuyển dần sang bột đen.',
       },
     ],
@@ -557,8 +557,8 @@ const NONIONIC_NOMENCLATURE = [
   { formula: 'CaO', name: 'Quicklime (CaO)' },
   { formula: 'CaSO₄.2H₂O', name: 'Thạch cao sống' },
   { formula: 'C₂H₅OH', name: 'Cồn (Ethanol/Rượu etylic)' },
-  { formula: 'CH₃COOH', name: 'Giấm ăn (Axit axetic 5%)' },
-  { formula: 'C₆H₈O₆', name: 'Vitamin C (Axit ascorbic)' },
+  { formula: 'CH₃COOH', name: 'Giấm ăn (Acid axetic 5%)' },
+  { formula: 'C₆H₈O₆', name: 'Vitamin C (Acid ascorbic)' },
   { formula: 'C₉H₈O₄', name: 'Aspirin' },
   { formula: 'C₆H₁₂O₆', name: 'Đường Glucozơ' },
   { formula: 'NaCl', name: 'Table salt (NaCl)' },
@@ -571,7 +571,7 @@ const SAFETY_SIGNS = [
   { icon: '🧪', title: 'Chất Ăn mòn', desc: 'Phá hủy kim loại và mô sống (da, mắt) khi tiếp xúc.', level: 'Cao' },
   { icon: '💀', title: 'Độc tính Cấp tính', desc: 'Gây chết người hoặc tổn thương nghiêm trọng nếu hít/nuốt.', level: 'Cực Cao' },
   { icon: 'goggles', title: 'Kính Bảo hộ', desc: 'Bảo vệ mắt khỏi hóa chất văng bắn và hơi độc.', level: 'Bắt buộc' },
-  { icon: 'gloves', title: 'Găng tay chịu hóa chất', desc: 'Bảo vệ da tay khi tiếp xúc với axit/kiềm mạnh.', level: 'Bắt buộc' },
+  { icon: 'gloves', title: 'Găng tay chịu hóa chất', desc: 'Bảo vệ da tay khi tiếp xúc với acid/kiềm mạnh.', level: 'Bắt buộc' },
   { icon: 'hood', title: 'Tủ hút (Fume Hood)', desc: 'Tiến hành các phản ứng sinh khí độc hoặc bay hơi mạnh.', level: 'Khuyên dùng' },
 ];
 
@@ -616,7 +616,7 @@ const LAB_EQUIPMENT = [
   { name: 'Condenser (Ống ngưng)', icon: 'condenser', use: 'Làm lạnh hơi nước chuyển thành lỏng trong quá trình chưng cất.' },
 ];
 
-// ——— HỒ SƠ AXIT ĐẶC (CONC. ACIDS) ———
+// ——— HỒ SƠ ACID ĐẶC (CONC. ACIDS) ———
 const CONC_ACID_PROFILES = [
   {
     acid: 'H₂SO₄ Đặc (98%)',
@@ -635,8 +635,8 @@ const CONC_ACID_PROFILES = [
     ]
   },
   {
-    acid: 'HF (Axit Flohiđric)',
-    features: ['Ăn mòn thủy tinh mạnh mẽ', 'Cực độc, thấm qua da hủy hoại xương', 'Axit yếu về điện ly nhưng cực mạnh về hoạt tính'],
+    acid: 'HF (Acid Flohiđric)',
+    features: ['Ăn mòn thủy tinh mạnh mẽ', 'Cực độc, thấm qua da hủy hoại xương', 'Acid yếu về điện ly nhưng cực mạnh về hoạt tính'],
     reactions: [
       { eq: 'SiO₂ + 4HF → SiF₄↑ + 2H₂O', note: 'Phản ứng dùng để khắc chữ lên thủy tinh.' },
       { eq: 'CaF₂ + H₂SO₄ → CaSO₄ + 2HF', note: 'Phương pháp điều chế HF trong công nghiệp.' }
@@ -649,16 +649,16 @@ const METAL_REACTIVITY = [
   { symbol: 'Na', name: 'Sodium', note: 'Phản ứng mạnh với nước lạnh' },
   { symbol: 'Ca', name: 'Calcium', note: 'Phản ứng với nước ở nhiệt độ thường' },
   { symbol: 'Mg', name: 'Magnesium', note: 'Phản ứng chậm với nước lạnh, nhanh với nước nóng' },
-  { symbol: 'Al', name: 'Aluminium', note: 'Có lớp oxit bảo vệ, phản ứng với axit mạnh' },
-  { symbol: 'Zn', name: 'Zinc', note: 'Phản ứng với axit giải phóng H2' },
-  { symbol: 'Fe', name: 'Iron', note: 'Phản ứng với axit loãng và hơi nước nóng' },
-  { symbol: 'Ni', name: 'Nickel', note: 'Phản ứng chậm với axit' },
-  { symbol: 'Sn', name: 'Tin', note: 'Phản ứng với axit khi đun nóng' },
-  { symbol: 'Pb', name: 'Lead', note: 'Phản ứng yếu với axit loãng' },
+  { symbol: 'Al', name: 'Aluminium', note: 'Có lớp oxit bảo vệ, phản ứng với acid mạnh' },
+  { symbol: 'Zn', name: 'Zinc', note: 'Phản ứng với acid giải phóng H2' },
+  { symbol: 'Fe', name: 'Iron', note: 'Phản ứng với acid loãng và hơi nước nóng' },
+  { symbol: 'Ni', name: 'Nickel', note: 'Phản ứng chậm với acid' },
+  { symbol: 'Sn', name: 'Tin', note: 'Phản ứng với acid khi đun nóng' },
+  { symbol: 'Pb', name: 'Lead', note: 'Phản ứng yếu với acid loãng' },
   { symbol: 'H', name: '(Hydrogen)', note: 'Mốc so sánh hoạt động hóa học', isDivider: true },
-  { symbol: 'Cu', name: 'Copper', note: 'Không phản ứng với axit loãng (HCl, H2SO4 loãng)' },
+  { symbol: 'Cu', name: 'Copper', note: 'Không phản ứng với acid loãng (HCl, H2SO4 loãng)' },
   { symbol: 'Hg', name: 'Mercury', note: 'Kim loại lỏng, hoạt động yếu' },
-  { symbol: 'Ag', name: 'Silver', note: 'Kim loại quý, chỉ tan trong axit oxy hóa mạnh' },
+  { symbol: 'Ag', name: 'Silver', note: 'Kim loại quý, chỉ tan trong acid oxy hóa mạnh' },
   { symbol: 'Pt', name: 'Platinum', note: 'Kim loại rất trơ, chỉ tan trong nước cường toan' },
   { symbol: 'Au', name: 'Gold', note: 'Kim loại trơ nhất, không bị oxy hóa trong không khí' },
 ];
