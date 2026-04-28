@@ -6,7 +6,7 @@
   --chat-accent: #00ffcc;
 }
 
-#chatbot-container {
+.chatbot-container {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -14,7 +14,7 @@
   font-family: 'Inter', sans-serif;
 }
 
-#chatbot-toggle {
+.chatbot-toggle {
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -28,18 +28,18 @@
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-#chatbot-toggle:hover {
+.chatbot-toggle:hover {
   transform: scale(1.1) rotate(5deg);
   box-shadow: 0 0 30px rgba(56, 189, 248, 0.8);
 }
 
-#chatbot-toggle svg {
+.chatbot-toggle svg {
   width: 30px;
   height: 30px;
   stroke: #fff;
 }
 
-#chatbot-window {
+.chatbot-window {
   position: absolute;
   bottom: 80px;
   right: 0;
@@ -101,7 +101,7 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
-#chat-messages {
+.chat-messages {
   flex: 1;
   padding: 20px;
   overflow-y: auto;
@@ -110,11 +110,11 @@
   gap: 15px;
 }
 
-#chat-messages::-webkit-scrollbar {
+.chat-messages::-webkit-scrollbar {
   width: 4px;
 }
 
-#chat-messages::-webkit-scrollbar-thumb {
+.chat-messages::-webkit-scrollbar-thumb {
   background: var(--chat-border);
   border-radius: 2px;
 }
@@ -159,7 +159,7 @@
   gap: 10px;
 }
 
-#chat-input {
+.chat-input {
   flex: 1;
   background: rgba(255,255,255,0.05);
   border: 1px solid var(--chat-border);
@@ -170,12 +170,12 @@
   outline: none;
 }
 
-#chat-input:focus {
+.chat-input:focus {
   border-color: var(--chat-primary);
   background: rgba(56, 189, 248, 0.05);
 }
 
-#chat-send {
+.chat-send {
   background: var(--chat-primary);
   border: none;
   border-radius: 8px;
@@ -188,7 +188,7 @@
   transition: all 0.2s;
 }
 
-#chat-send:hover {
+.chat-send:hover {
   transform: scale(1.1);
   box-shadow: 0 0 10px var(--chat-primary);
 }
@@ -202,7 +202,7 @@
 }
 
 /* Hiệu ứng bong bóng thông báo */
-#chat-notification {
+.chatbot-notification {
   position: absolute;
   top: -5px;
   right: -5px;

@@ -512,9 +512,9 @@ window.OptimizationLab = {
         border: 1px solid rgba(0, 255, 204, 0.2);
       }
 
-      .reaction-equation .reactant { color: #4ade80; }
+      .reaction-equation .reactant { color: inherit; }
       .reaction-equation .arrow { color: #fff; margin: 0 10px; }
-      .reaction-equation .product { color: #ff4d4d; }
+      .reaction-equation .product { color: inherit; }
 
       .ai-insight {
         background: rgba(0, 255, 204, 0.05);
@@ -653,16 +653,38 @@ window.OptimizationLab = {
     // Render Equation
     const eqBox = document.getElementById('opt-eq-box');
     if (eqBox) {
-      const rColor = rxn.reactantColor || '#4ade80';
-      const pColor = rxn.productColor || '#ff4d4d';
+      let eqHtml = '';
+      if (this.currentReaction === 'haber') {
+        eqHtml = `<span style="color:#3b82f6 !important">N₂</span> <span style="color:#fff !important">+</span> <span style="color:#facc15 !important">3H₂</span>`;
+      } else if (this.currentReaction === 'ester') {
+        eqHtml = `<span style="color:#10b981 !important">CH₃COOH</span> <span style="color:#fff !important">+</span> <span style="color:#f97316 !important">C₂H₅OH</span>`;
+      } else if (this.currentReaction === 'fescn') {
+        eqHtml = `<span style="color:#f59e0b !important">Fe³⁺</span> <span style="color:#fff !important">+</span> <span style="color:#eab308 !important">3SCN⁻</span>`;
+      } else if (this.currentReaction === 'no2') {
+        eqHtml = `<span style="color:#a52a2a !important">2NO₂</span>`;
+      }
+      
+      let prodHtml = '';
+      if (this.currentReaction === 'haber') {
+        prodHtml = `<span style="color:#ef4444 !important">2NH₃</span>`;
+      } else if (this.currentReaction === 'ester') {
+        prodHtml = `<span style="color:#a855f7 !important">CH₃COOC₂H₅</span> <span style="color:#fff !important">+</span> <span style="color:#06b6d4 !important">H₂O</span>`;
+      } else if (this.currentReaction === 'fescn') {
+        prodHtml = `<span style="color:#b91c1c !important">[Fe(SCN)]²⁺</span>`;
+      } else if (this.currentReaction === 'no2') {
+        prodHtml = `<span style="color:#ffffff !important">N₂O₄</span>`;
+      }
+
       eqBox.innerHTML = `
-        <span class="reactant" style="color:${rColor}">${rxn.reactant}</span>
-        <span class="arrow" id="eq-arrow">⇌</span>
-        <span class="product" style="color:${pColor}">${rxn.product}</span>
+        <span class="reactant">${eqHtml}</span>
+        <span class="arrow" id="eq-arrow" style="margin: 0 10px;">⇌</span>
+        <span class="product">${prodHtml}</span>
         <span class="deltaH" style="display:block; font-size:12px; color:#ff3131; text-align:center; margin-top:10px;">${rxn.delta}</span>
       `;
 
       // Cập nhật legend dots ngay lập tức
+      const rColor = rxn.reactantColor || '#4ade80';
+      const pColor = rxn.productColor || '#ff4d4d';
       const legendReactantDot = document.querySelector('.chamber-legend .dot.reactant');
       const legendProductDot = document.querySelector('.chamber-legend .dot.product');
       if (legendReactantDot) legendReactantDot.style.background = rColor;
@@ -742,33 +764,108 @@ window.OptimizationLab = {
     const chamber = document.getElementById('chamber');
     if (!chamber) return;
     
-    chamber.innerHTML = '';
-    const rxn = OPT_REACTIONS[this.currentReaction];
-    const particleCount = 20;
-    const rColor = rxn.reactantColor || '#4ade80';
-    const pColor = rxn.productColor || '#ff4d4d';
-    
-    // Cập nhật legend dots & text
-    const legendReactantItem = document.querySelector('.chamber-legend .legend-item:nth-child(1)');
-    const legendProductItem = document.querySelector('.chamber-legend .legend-item:nth-child(2)');
-    const legendReactantDot = document.querySelector('.chamber-legend .dot.reactant');
-    const legendProductDot = document.querySelector('.chamber-legend .dot.product');
-    
-    if (legendReactantDot) legendReactantDot.style.background = rColor;
-    if (legendProductDot) legendProductDot.style.background = pColor;
-    if (legendReactantItem) legendReactantItem.style.color = rColor;
-    if (legendProductItem) legendProductItem.style.color = pColor;
+    const legendContainer = document.querySelector('.chamber-legend');
+    if (legendContainer) {
+      if (this.currentReaction === 'haber') {
+        legendContainer.innerHTML = `
+          <div class="legend-item"><span class="dot" style="background:#3b82f6; box-shadow: 0 0 8px #3b82f6;"></span> N₂ (Khí Nitơ)</div>
+          <div class="legend-item"><span class="dot" style="background:#facc15; box-shadow: 0 0 8px #facc15;"></span> H₂ (Khí Hydro)</div>
+          <div class="legend-item"><span class="dot" style="background:#ef4444; box-shadow: 0 0 8px #ef4444;"></span> NH₃ (Amoniac)</div>
+        `;
+      } else if (this.currentReaction === 'ester') {
+        legendContainer.innerHTML = `
+          <div class="legend-item"><span class="dot" style="background:#10b981; box-shadow: 0 0 8px #10b981;"></span> Axit</div>
+          <div class="legend-item"><span class="dot" style="background:#f97316; box-shadow: 0 0 8px #f97316;"></span> Rượu</div>
+          <div class="legend-item"><span class="dot" style="background:#a855f7; box-shadow: 0 0 8px #a855f7;"></span> Este + H₂O</div>
+        `;
+      } else if (this.currentReaction === 'fescn') {
+        legendContainer.innerHTML = `
+          <div class="legend-item"><span class="dot" style="background:#f59e0b; box-shadow: 0 0 8px #f59e0b;"></span> Fe³⁺</div>
+          <div class="legend-item"><span class="dot" style="background:#eab308; box-shadow: 0 0 8px #eab308;"></span> SCN⁻</div>
+          <div class="legend-item"><span class="dot" style="background:#b91c1c; box-shadow: 0 0 8px #b91c1c;"></span> [Fe(SCN)]²⁺</div>
+        `;
+      } else if (this.currentReaction === 'no2') {
+        legendContainer.innerHTML = `
+          <div class="legend-item"><span class="dot" style="background:#a52a2a; box-shadow: 0 0 8px #a52a2a;"></span> NO₂ (Nâu đỏ)</div>
+          <div class="legend-item"><span class="dot" style="background:#ffffff; box-shadow: 0 0 8px #ffffff;"></span> N₂O₄ (Không màu)</div>
+        `;
+      }
+    }
 
-    for (let i = 0; i < particleCount; i++) {
+    chamber.innerHTML = '';
+    const totalParticles = 30;
+    const yieldPercent = this.state.yield;
+
+    const createGasParticle = (text, color) => {
       const p = document.createElement('div');
-      const isProduct = Math.random() * 100 < this.state.yield;
-      p.className = isProduct ? 'particle product' : 'particle reactant';
-      p.style.background = isProduct ? pColor : rColor;
-      p.style.boxShadow = `0 0 10px ${isProduct ? pColor : rColor}`;
-      p.style.left = Math.random() * 90 + '%';
-      p.style.top = Math.random() * 90 + '%';
-      p.style.animationDelay = Math.random() * 2 + 's';
-      chamber.appendChild(p);
+      p.style.position = 'absolute';
+      p.style.left = Math.random() * 85 + '%';
+      p.style.top = Math.random() * 85 + '%';
+      
+      const padX = text.length > 4 ? 12 : 0;
+      p.style.padding = `0 ${padX}px`;
+      p.style.minWidth = '38px';
+      p.style.height = '38px';
+      p.style.borderRadius = text.length > 4 ? '20px' : '50%';
+      p.style.background = `rgba(10, 15, 30, 0.85)`;
+      p.style.border = `2px solid ${color}`;
+      p.style.boxShadow = `0 0 15px ${color}, inset 0 0 8px ${color}`;
+      p.style.display = 'flex';
+      p.style.alignItems = 'center';
+      p.style.justifyContent = 'center';
+      p.style.animation = `floatAround ${3 + Math.random() * 3}s ease-in-out infinite alternate`;
+      p.style.backdropFilter = 'blur(4px)';
+      
+      const span = document.createElement('span');
+      span.innerText = text;
+      span.style.color = '#ffffff';
+      span.style.fontFamily = "'Orbitron', sans-serif";
+      span.style.fontSize = text.length > 6 ? '10px' : '12px';
+      span.style.fontWeight = 'bold';
+      span.style.textShadow = `0 0 5px ${color}, 0 0 10px ${color}`;
+      span.style.pointerEvents = 'none';
+      
+      p.appendChild(span);
+      return p;
+    };
+
+    if (this.currentReaction === 'haber') {
+      const productCount = Math.round(totalParticles * (yieldPercent / 100));
+      const reactantCount = totalParticles - productCount;
+      const ratio = this.state.c || 3;
+      const n2Count = Math.round(reactantCount / (ratio + 1));
+      const h2Count = reactantCount - n2Count;
+
+      for (let i = 0; i < n2Count; i++) chamber.appendChild(createGasParticle('N₂', '#3b82f6'));
+      for (let i = 0; i < h2Count; i++) chamber.appendChild(createGasParticle('H₂', '#facc15'));
+      for (let i = 0; i < productCount; i++) chamber.appendChild(createGasParticle('NH₃', '#ef4444'));
+    } else if (this.currentReaction === 'ester') {
+      const productCount = Math.round(totalParticles * (yieldPercent / 100));
+      const reactantCount = totalParticles - productCount;
+      const acidCount = Math.round(reactantCount / 2);
+      const alcCount = reactantCount - acidCount;
+
+      for (let i = 0; i < acidCount; i++) chamber.appendChild(createGasParticle('CH₃COOH', '#10b981'));
+      for (let i = 0; i < alcCount; i++) chamber.appendChild(createGasParticle('C₂H₅OH', '#f97316'));
+      for (let i = 0; i < productCount; i++) {
+        if (i % 2 === 0) chamber.appendChild(createGasParticle('Este', '#a855f7'));
+        else chamber.appendChild(createGasParticle('H₂O', '#06b6d4'));
+      }
+    } else if (this.currentReaction === 'fescn') {
+      const productCount = Math.round(totalParticles * (yieldPercent / 100));
+      const reactantCount = totalParticles - productCount;
+      const feCount = Math.round(reactantCount / 2);
+      const scnCount = reactantCount - feCount;
+
+      for (let i = 0; i < feCount; i++) chamber.appendChild(createGasParticle('Fe³⁺', '#f59e0b'));
+      for (let i = 0; i < scnCount; i++) chamber.appendChild(createGasParticle('SCN⁻', '#eab308'));
+      for (let i = 0; i < productCount; i++) chamber.appendChild(createGasParticle('FeSCN²⁺', '#b91c1c'));
+    } else if (this.currentReaction === 'no2') {
+      const productCount = Math.round(totalParticles * (yieldPercent / 100));
+      const reactantCount = totalParticles - productCount;
+
+      for (let i = 0; i < reactantCount; i++) chamber.appendChild(createGasParticle('NO₂', '#a52a2a'));
+      for (let i = 0; i < productCount; i++) chamber.appendChild(createGasParticle('N₂O₄', '#ffffff'));
     }
   }
 };

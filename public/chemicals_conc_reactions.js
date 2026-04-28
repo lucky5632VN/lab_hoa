@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
       requiresSafety: ['goggles'],
     },
 
-    // NH₃ đặc + CuSO₄ → phức [Cu(NH₃)₄]²⁺ XANH DỰC RỠ  
+    // NH₃ đặc + CuSO₄ → phức [Cu(NH₃)₄]²⁺ XANH RỰC RỠ  
     'nh3_conc+cuso4': {
       reactants: ['nh3_conc', 'cuso4'], products: ['[Cu(NH₃)₄]²⁺', 'SO₄²⁻'],
       equation: 'Cu²⁺ + 4NH₃(đặc) → [Cu(NH₃)₄]²⁺   [xanh thẫm rực rỡ]',

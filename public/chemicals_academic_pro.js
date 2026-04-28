@@ -159,6 +159,155 @@ const ACADEMIC_REACTIONS = {
     description: 'Phản ứng cực nhạy để nhận biết ion Sắt(III). Phức sulfoxyanua sắt có màu đỏ thẫm như máu.',
     observation: '🩸 Dung dịch chuyển sang màu ĐỎ MÁU kỳ ảo.',
     logType: 'success'
+  },
+  
+  // --- 5. HÓA HỮU CƠ CHUYÊN SÂU (Advanced Organic) ---
+
+  // Phenol + HNO₃ (Nitro hóa tạo Acid Picric)
+  'phenol+hno3': {
+    reactants: ['phenol', 'hno3'],
+    products: ['Acid Picric', 'H₂O'],
+    equation: 'C₆H₅OH + 3HNO₃ --(H₂SO₄ đ, t⁰)--> C₆H₂(NO₂)₃OH + 3H₂O',
+    type: 'nitration', effect: 'precipitate-yellow',
+    requires: { heat: true, catalyst: 'h2so4_con' },
+    synthesis: { name: 'Điều chế Acid Picric (2,4,6-trinitrophenol)', icon: '🧨', category: 'Nitro hóa' },
+    colorChange: { end: 'rgba(254,240,138,0.7)' },
+    particles: [{ type: 'precipitate', color: '#facc15', count: 50 }],
+    description: 'Xúc tác H₂SO₄ đặc đóng vai trò tách nước tạo ion NO₂⁺ mạnh. Ion này tấn công vòng thơm Phenol để thế vào các vị trí 2,4,6 tạo Acid Picric.',
+    observation: '🟡 Dung dịch chuyển sang màu vàng đậm. ⚠️ Xuất hiện kết tủa vàng của Acid Picric khi có đầy đủ HNO₃ và xúc tác H₂SO₄.',
+    hazardLevel: 3, hazardType: 'explosion', logType: 'danger'
+  },
+
+  // --- 6. PHẢN ỨNG CỘNG HỮU CƠ (Organic Addition) ---
+
+  // Cộng H2 vào Ethylene (Ni, t)
+  'c2h4+h2_gas': {
+    reactants: ['c2h4', 'h2_gas'],
+    products: ['C₂H₆'],
+    equation: 'CH₂=CH₂ + H₂ --(Ni, t⁰)--> CH₃-CH₃',
+    type: 'hydrogenation', effect: 'bubbles-light',
+    requires: { heat: true, catalyst: 'ni_metal' },
+    synthesis: { name: 'Hiđro hóa Etilen thành Etan', icon: '💨', category: 'Phản ứng Cộng' },
+    description: 'Hiđro cộng vào liên kết đôi của Etilen dưới tác dụng của xúc tác Niken và nhiệt độ, tạo thành Etan (hiđrocacbon no).',
+    observation: '💨 Khí Etan không màu được hình thành.',
+    logType: 'success'
+  },
+
+  // Cộng H2 vào Acetylene (Ni, t) -> Ethane
+  'c2h2+h2_gas_ni': {
+    reactants: ['c2h2', 'h2_gas'],
+    products: ['C₂H₆'],
+    equation: 'CH≡CH + 2H₂ --(Ni, t⁰)--> CH₃-CH₃',
+    type: 'hydrogenation', effect: 'bubbles-light',
+    requires: { heat: true, catalyst: 'ni_metal' },
+    synthesis: { name: 'Hiđro hóa hoàn toàn Axetilen', icon: '💨', category: 'Phản ứng Cộng' },
+    description: 'Dưới xúc tác Ni, Axetilen cộng tối đa 2 phân tử Hiđro để trở thành hiđrocacbon no (Etan).',
+    observation: '💨 Axetilen đã được hiđro hóa hoàn toàn thành Etan.',
+    logType: 'success'
+  },
+
+  // Cộng H2 vào Acetylene (Pd/PbCO3) -> Ethylene
+  'c2h2+h2_gas_pd': {
+    reactants: ['c2h2', 'h2_gas'],
+    products: ['C₂H₄'],
+    equation: 'CH≡CH + H₂ --(Pd/PbCO₃, t⁰)--> CH₂=CH₂',
+    type: 'hydrogenation', effect: 'bubbles-light',
+    requires: { heat: true, catalyst: 'pd_c' },
+    synthesis: { name: 'Hiđro hóa chọn lọc Axetilen', icon: '🌿', category: 'Phản ứng Cộng' },
+    description: 'Sử dụng xúc tác Lindlar (Pd/PbCO₃), phản ứng cộng Hiđro dừng lại ở giai đoạn tạo Etilen.',
+    observation: '🌿 Đã điều chế thành công Etilen từ Axetilen bằng xúc tác chọn lọc.',
+    logType: 'success'
+  },
+
+  // Mất màu nước Brom (Ethylene)
+  'c2h4+br2': {
+    reactants: ['c2h4', 'br2'],
+    products: ['CH₂Br-CH₂Br'],
+    equation: 'CH₂=CH₂ + Br₂ → CH₂Br-CH₂Br (1,2-đibromoetan)',
+    type: 'addition-halogen', effect: 'color-change',
+    colorChange: { end: 'rgba(255,255,255,0.1)' },
+    synthesis: { name: 'Nhận biết Etilen bằng nước Brom', icon: '🧪', category: 'Nhận biết' },
+    description: 'Etilen cộng vào phân tử Brom làm bẻ gãy liên kết pi, dẫn đến hiện tượng mất màu nâu đỏ đặc trưng của nước Brom.',
+    observation: '🟠 Dung dịch Brom bị MẤT MÀU hoàn toàn. Chứng tỏ có liên kết bội.',
+    logType: 'success'
+  },
+
+  // Mất màu nước Brom (Acetylene)
+  'c2h2+br2': {
+    reactants: ['c2h2', 'br2'],
+    products: ['CHBr₂-CHBr₂'],
+    equation: 'CH≡CH + 2Br₂ → CHBr₂-CHBr₂ (1,1,2,2-tetrabromoetan)',
+    type: 'addition-halogen', effect: 'color-change',
+    colorChange: { end: 'rgba(255,255,255,0.1)' },
+    synthesis: { name: 'Nhận biết Axetilen bằng nước Brom', icon: '🧪', category: 'Nhận biết' },
+    description: 'Axetilen phản ứng với Brom theo tỉ lệ 1:2, làm mất màu nước Brom rất nhanh.',
+    observation: '🟠 Dung dịch Brom bị MẤT MÀU. Axetilen đã phản ứng cộng với Brom.',
+    logType: 'success'
+  },
+
+  // Cộng HBr vào Ethylene
+  'c2h4+hbr': {
+    reactants: ['c2h4', 'hbr'],
+    products: ['CH₃-CH₂Br'],
+    equation: 'CH₂=CH₂ + HBr → CH₃-CH₂Br (Ethyl bromide)',
+    type: 'addition', effect: 'bubbles-light',
+    synthesis: { name: 'Cộng Hiđro halogenua vào Etilen', icon: '🧴', category: 'Phản ứng Cộng' },
+    description: 'Phản ứng cộng tác nhân bất đối xứng vào alkene đối xứng tạo dẫn xuất halogen duy nhất.',
+    observation: '🧪 Ethyl bromide được hình thành trong dung dịch.',
+    logType: 'info'
+  },
+
+  // Cộng Nước vào Ethylene (Hydrat hóa)
+  'c2h4+h2o': {
+    reactants: ['c2h4', 'h2o'],
+    products: ['C₂H₅OH'],
+    equation: 'CH₂=CH₂ + H₂O --(H₂SO₄ l, t⁰)--> C₂H₅OH',
+    type: 'hydration', effect: 'bubbles-light',
+    requires: { heat: true, catalyst: 'h2so4_dil' },
+    synthesis: { name: 'Sản xuất Ethanol (Cồn) công nghiệp', icon: '🍺', category: 'Hydrat hóa' },
+    description: 'Etilen cộng nước với xúc tác acid mạnh tạo thành rượu Etylic. Đây là phương pháp chính để sản xuất cồn thực phẩm và công nghiệp.',
+    observation: '🍺 Ethanol đã được tổng hợp thành công.',
+    logType: 'success'
+  },
+
+  // Cộng Nước vào Acetylene (Hg2+, H+)
+  'c2h2+h2o': {
+    reactants: ['c2h2', 'h2o'],
+    products: ['CH₃CHO'],
+    equation: 'CH≡CH + H₂O --(HgSO₄/H₂SO₄, 80⁰C)--> CH₃CHO',
+    type: 'hydration', effect: 'bubbles-light',
+    requires: { heat: true, catalyst: 'hgso4' },
+    synthesis: { name: 'Hydrat hóa Axetilen tạo Anđehit', icon: '🧪', category: 'Hydrat hóa' },
+    description: 'Nước cộng vào liên kết ba của Axetilen tạo ra Enol không bền, ngay lập tức chuyển hóa thành Anđehit axetic (Acetaldehyde).',
+    observation: '🍎 Dung dịch có mùi táo đặc trưng của Acetaldehyde được hình thành.',
+    logType: 'success'
+  },
+
+  // Cộng Nước vào Propyne (Hg2+, H+) -> Acetone
+  'propyne+h2o': {
+    reactants: ['propyne', 'h2o'],
+    products: ['CH₃COCH₃'],
+    equation: 'CH₃-C≡CH + H₂O --(HgSO₄/H₂SO₄)--> CH₃-CO-CH₃',
+    type: 'hydration', effect: 'bubbles-light',
+    requires: { heat: true, catalyst: 'hgso4' },
+    synthesis: { name: 'Tổng hợp Acetone từ Propyne', icon: '🧴', category: 'Hydrat hóa' },
+    description: 'Theo quy tắc Markovnikov, nhóm -OH cộng vào Carbon bậc cao hơn, sau đó chuyển vị thành Acetone (propanone).',
+    observation: '🧴 Acetone (dung môi rửa sơn móng tay) đã được hình thành.',
+    logType: 'success'
+  },
+
+  // Phenol + Br2 -> Kết tủa trắng
+  'phenol+br2': {
+    reactants: ['phenol', 'br2'],
+    products: ['2,4,6-tribromophenol', 'HBr'],
+    equation: 'C₆H₅OH + 3Br₂ → C₆H₂Br₃OH↓ + 3HBr',
+    type: 'substitution-aromatic', effect: 'precipitate-white',
+    synthesis: { name: 'Nhận biết Phenol bằng nước Brom', icon: '⚪', category: 'Nhận biết' },
+    colorChange: { end: 'rgba(255,255,255,0.1)' },
+    particles: [{ type: 'precipitate', color: '#ffffff', count: 60 }],
+    description: 'Nhóm -OH làm tăng mật độ electron ở các vị trí ortho và para, khiến Phenol phản ứng với nước Brom dễ dàng hơn Benzen nhiều lần, tạo kết tủa trắng.',
+    observation: '🟠 Nước Brom mất màu nâu đỏ. ⚪ Xuất hiện kết tủa TRẮNG của 2,4,6-tribromophenol.',
+    logType: 'success'
   }
 };
 

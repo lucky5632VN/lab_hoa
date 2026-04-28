@@ -243,20 +243,24 @@ window.generateGreenReport = function() {
       </div>
 
       <div class="eco-metrics-row">
-        <div class="eco-metric-card">
-          <div class="eco-metric-value" style="color:${energy < 30 ? '#ff3131' : energy < 60 ? '#f59e0b' : '#00ffcc'}">${energy.toFixed(1)}%</div>
+        <div class="eco-metric-card" style="color:${energy < 30 ? '#ff3131' : energy < 60 ? '#f59e0b' : '#00ffcc'}">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom: 10px; filter: drop-shadow(0 0 5px currentColor);"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 8.8 17 11.5a6.5 6.5 0 0 1-6 8.5Z"/><path d="M11 20V11.5"/></svg>
+          <div class="eco-metric-value">${energy.toFixed(1)}%</div>
           <div class="eco-metric-label">DỰ TRỮ SINH THÁI</div>
         </div>
-        <div class="eco-metric-card">
-          <div class="eco-metric-value" style="color:#f59e0b">${data.totalWaste.toFixed(2)}g</div>
+        <div class="eco-metric-card" style="color:#f59e0b">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom: 10px; filter: drop-shadow(0 0 5px currentColor);"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+          <div class="eco-metric-value">${data.totalWaste.toFixed(2)}g</div>
           <div class="eco-metric-label">TỔNG LÃNG PHÍ</div>
         </div>
-        <div class="eco-metric-card">
-          <div class="eco-metric-value" style="color:#38bdf8">${data.avgEconomy}%</div>
+        <div class="eco-metric-card" style="color:#38bdf8">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom: 10px; filter: drop-shadow(0 0 5px currentColor);"><circle cx="12" cy="12" r="3"/><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z"/><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/></svg>
+          <div class="eco-metric-value">${data.avgEconomy}%</div>
           <div class="eco-metric-label">HIỆU QUẢ NGUYÊN TỬ</div>
         </div>
-        <div class="eco-metric-card">
-          <div class="eco-metric-value" style="color:${violations > 0 ? '#ff3131' : '#00ffcc'}">${violations}</div>
+        <div class="eco-metric-card" style="color:${violations > 0 ? '#ff3131' : '#00ffcc'}">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom: 10px; filter: drop-shadow(0 0 5px currentColor);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4M12 16h.01"/></svg>
+          <div class="eco-metric-value">${violations}</div>
           <div class="eco-metric-label">VI PHẠM AN TOÀN</div>
         </div>
       </div>
@@ -276,13 +280,13 @@ window.generateGreenReport = function() {
 
       <div class="verdict-box" style="border-color:${rankInfo.color}; background: rgba(0,0,0,0.4);">
         <div style="display:flex; align-items:center; gap:12px; margin-bottom: 10px;">
-          <span style="font-size:28px;">${rankInfo.emoji}</span>
+          <span class="eco-verdict-emoji" style="font-size:28px;">${rankInfo.emoji}</span>
           <div>
             <div style="font-size:11px; color:#64748b; letter-spacing:2px;">KẾT LUẬN CỦA CHỈ HUY AI</div>
             <h3 class="${rankInfo.cls}" style="margin:2px 0; font-size:18px; color:${rankInfo.color}; text-shadow:0 0 10px ${rankInfo.color};">${rankInfo.title}</h3>
           </div>
         </div>
-        <p style="color:#cbd5e1; font-style:italic; margin:0; line-height:1.6;">"${rankInfo.message}"</p>
+        <p class="verdict-message ${rankInfo.cls}-msg" style="color:#cbd5e1; font-style:italic; margin:0; line-height:1.6;">"${rankInfo.message}"</p>
       </div>
 
       <div style="display:flex; gap:10px; margin-top:20px;">

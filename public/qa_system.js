@@ -231,37 +231,161 @@ function switchKnowledgeTab(tabId) {
 
   const container = document.getElementById('guideStepsContent');
   if (tabId === 'qa') {
-    renderQAInPanel(container);
+    toggleQA();
   } else {
     renderSynthesisInPanel(container);
   }
 }
 
+window.qaActiveSubTab = 'ai';
+window.qaSelectedBot = 'lab';
+
 function renderQAInPanel(container) {
+  const activeSubTab = window.qaActiveSubTab || 'ai';
+  const selectedBot = window.qaSelectedBot || 'lab';
+  
   let html = `
-    <div class="knowledge-header">
-      <h3>HỎI ĐÁP & HỖ TRỢ</h3>
-      <div class="terminal-line"></div>
-    </div>
-    <div class="qa-list-panel">
+    <div class="qa-integrated-layout" style="padding: 15px; display: flex; flex-direction: column; font-family: 'Inter', sans-serif;">
+      
+      <!-- Sub tabs navigation -->
+      <div class="qa-subtabs" style="display: flex; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 4px; margin-bottom: 15px;">
+        <button id="subtab-ai" onclick="switchQASubTab('ai')" style="flex: 1; background: ${activeSubTab === 'ai' ? 'rgba(56, 189, 248, 0.15)' : 'transparent'}; color: ${activeSubTab === 'ai' ? '#38bdf8' : '#94a3b8'}; border: none; border-radius: 6px; padding: 8px; font-size: 12px; font-weight: bold; font-family: 'Orbitron', sans-serif; cursor: pointer; transition: all 0.2s;">🤖 TRỢ LÝ AI</button>
+        <button id="subtab-faq" onclick="switchQASubTab('faq')" style="flex: 1; background: ${activeSubTab === 'faq' ? 'rgba(56, 189, 248, 0.15)' : 'transparent'}; color: ${activeSubTab === 'faq' ? '#38bdf8' : '#94a3b8'}; border: none; border-radius: 6px; padding: 8px; font-size: 12px; font-weight: bold; font-family: 'Orbitron', sans-serif; cursor: pointer; transition: all 0.2s;">❓ HỎI ĐÁP NHANH</button>
+      </div>
   `;
 
-  QA_DATA.forEach((item, index) => {
+  if (activeSubTab === 'ai') {
     html += `
-      <div class="qa-item-panel" id="qa-p-${index}">
-        <div class="qa-q" onclick="toggleQAAccordion(${index})">
-          <span class="q-marker">Q:</span> ${item.question}
+      <!-- PART 1: AI ASSISTANTS -->
+      <div id="panel-ai-section" style="display: flex; flex-direction: column;">
+        <div class="bot-selectors" style="display: flex; gap: 8px; margin-bottom: 12px;">
+          <button id="panel-bot-lab" onclick="selectQAIdBot('lab')" style="flex: 1; background: ${selectedBot === 'lab' ? 'rgba(74, 222, 128, 0.1)' : 'rgba(30, 41, 59, 0.4)'}; color: ${selectedBot === 'lab' ? '#4ade80' : '#64748b'}; border: 1px solid ${selectedBot === 'lab' ? 'rgba(74, 222, 128, 0.4)' : 'rgba(255, 255, 255, 0.05)'}; border-radius: 6px; padding: 8px; font-size: 11px; font-weight: bold; font-family: 'Orbitron', sans-serif; cursor: pointer; transition: all 0.2s;">⚡ COMMANDER</button>
+          <button id="panel-bot-gen" onclick="selectQAIdBot('gen')" style="flex: 1; background: ${selectedBot === 'gen' ? 'rgba(56, 189, 248, 0.1)' : 'rgba(30, 41, 59, 0.4)'}; color: ${selectedBot === 'gen' ? '#38bdf8' : '#64748b'}; border: 1px solid ${selectedBot === 'gen' ? 'rgba(56, 189, 248, 0.4)' : 'rgba(255, 255, 255, 0.05)'}; border-radius: 6px; padding: 8px; font-size: 11px; font-weight: bold; font-family: 'Orbitron', sans-serif; cursor: pointer; transition: all 0.2s;">🌐 GENERAL AI</button>
         </div>
-        <div class="qa-a">
-          <div class="qa-a-inner">${item.answer}</div>
+
+        <div class="panel-chat-wrapper" style="display: flex; flex-direction: column; background: rgba(10, 15, 30, 0.6); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; overflow: hidden;">
+          <div id="panel-ai-messages" style="height: 250px; padding: 12px; overflow-y: auto; font-size: 12px; color: #cbd5e1; display: flex; flex-direction: column; gap: 8px; scroll-behavior: smooth;">
+            <!-- AI messages loaded here dynamically -->
+          </div>
+          <div id="panel-ai-typing" style="display: none; padding: 8px 12px; font-size: 10px; font-style: italic; color: #38bdf8; background: rgba(0,0,0,0.2);">AI đang phân tích dữ liệu...</div>
+          <div class="panel-chat-input-area" style="display: flex; border-top: 1px solid rgba(255,255,255,0.05); background: rgba(15, 23, 42, 0.9);">
+            <input type="text" id="panel-ai-input" placeholder="Hỏi trợ lý AI..." style="flex: 1; background: transparent; border: none; outline: none; color: #fff; padding: 12px; font-size: 12px;" onkeypress="if(event.key==='Enter') sendQAInPanelChat()">
+            <button onclick="sendQAInPanelChat()" style="background: transparent; border: none; color: #38bdf8; padding: 0 15px; font-size: 16px; cursor: pointer; font-weight: bold;">➔</button>
+          </div>
         </div>
       </div>
     `;
-  });
+  } else {
+    html += `
+      <!-- PART 2: PREDEFINED FAQs -->
+      <div id="panel-faq-section" style="display: flex; flex-direction: column; overflow-y: auto; max-height: 350px; gap: 10px;">
+    `;
+    QA_DATA.forEach((qa, idx) => {
+      html += `
+        <div class="faq-item" style="background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; padding: 10px;">
+          <div class="faq-q" style="color: #38bdf8; font-size: 13px; font-weight: bold; margin-bottom: 6px; display: flex; align-items: flex-start; gap: 5px;">
+            <span>❓</span> <span>${qa.question}</span>
+          </div>
+          <div class="faq-a" style="color: #cbd5e1; font-size: 12px; line-height: 1.5; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 6px;">
+            ${qa.answer}
+          </div>
+        </div>
+      `;
+    });
+    html += `</div>`;
+  }
 
   html += `</div>`;
   container.innerHTML = html;
+
+  if (activeSubTab === 'ai') {
+    updatePanelAIMessages();
+  }
 }
+
+window.switchQASubTab = function(tabId) {
+  window.qaActiveSubTab = tabId;
+  const container = document.getElementById('guideStepsContent');
+  if (container) renderQAInPanel(container);
+};
+
+window.selectQAIdBot = function(botId) {
+  window.qaSelectedBot = botId;
+  const container = document.getElementById('guideStepsContent');
+  if (container) renderQAInPanel(container);
+};
+
+window.updatePanelAIMessages = function() {
+  const msgsDiv = document.getElementById('panel-ai-messages');
+  if (!msgsDiv) return;
+  
+  msgsDiv.innerHTML = '';
+  const bot = window.qaSelectedBot === 'lab' ? window.labBot : window.generalBot;
+  
+  if (bot && bot.history) {
+    bot.history.forEach(msg => {
+      const mDiv = document.createElement('div');
+      mDiv.style.padding = '8px 12px';
+      mDiv.style.borderRadius = '8px';
+      mDiv.style.maxWidth = '85%';
+      mDiv.style.lineHeight = '1.4';
+      
+      if (msg.role === 'user') {
+        mDiv.style.background = 'rgba(56, 189, 248, 0.15)';
+        mDiv.style.border = '1px solid rgba(56, 189, 248, 0.3)';
+        mDiv.style.color = '#fff';
+        mDiv.style.alignSelf = 'flex-end';
+        mDiv.style.marginLeft = 'auto';
+      } else {
+        mDiv.style.background = 'rgba(30, 41, 59, 0.8)';
+        mDiv.style.border = '1px solid rgba(255, 255, 255, 0.05)';
+        mDiv.style.color = '#cbd5e1';
+        mDiv.style.alignSelf = 'flex-start';
+      }
+      
+      let text = msg.text;
+      let formatted = text
+        .replace(/\$([^\$]+)\$/g, '<b style="color:#00ffcc">$1</b>')
+        .replace(/\n/g, '<br>')
+        .replace(/^- (.*)$/gm, '• $1')
+        .replace(/^([🎯💡🌍⚠️].*):/gm, '<div style="color:#38bdf8; font-weight:bold; margin-top:6px; font-family:Orbitron, sans-serif;">$1</div>');
+
+      mDiv.innerHTML = formatted;
+      msgsDiv.appendChild(mDiv);
+    });
+    msgsDiv.scrollTop = msgsDiv.scrollHeight;
+  }
+};
+
+window.sendQAInPanelChat = async function() {
+  const input = document.getElementById('panel-ai-input');
+  if (!input) return;
+  
+  const text = input.value.trim();
+  if (!text) return;
+  
+  const bot = window.qaSelectedBot === 'lab' ? window.labBot : window.generalBot;
+  if (!bot) return;
+  
+  input.value = '';
+  bot.addMessage('user', text);
+  
+  window.updatePanelAIMessages();
+  
+  const typingInd = document.getElementById('panel-ai-typing');
+  if (typingInd) typingInd.style.display = 'block';
+  
+  try {
+    const response = await bot.callGemini(text, bot.isGeneral);
+    bot.addMessage('ai', response);
+  } catch (e) {
+    console.error(e);
+    bot.addMessage('ai', 'Lỗi: Không thể kết nối mạng Quantum.');
+  } finally {
+    if (typingInd) typingInd.style.display = 'none';
+    window.updatePanelAIMessages();
+  }
+};
 
 function renderSynthesisInPanel(container) {
   let html = `
@@ -306,5 +430,11 @@ function toggleQAAccordion(index) {
   if (!wasOpen) item.classList.add('open');
 }
 
-// Keep legacy toggle for potential header button use
-function toggleQA() { toggleGuide(); } 
+// Toggle General AI chatbot when clicking header button
+function toggleQA() { 
+  if (window.quantumChatbot) {
+    window.quantumChatbot.toggle();
+  } else if (window.generalBot) {
+    window.generalBot.toggle();
+  }
+} 

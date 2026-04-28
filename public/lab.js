@@ -2659,13 +2659,28 @@ function heatNearbyContainers(bunsen) {
               }
             }
 
-            // 2. Kiểm tra HEAT_REACTIONS
+            // 2. Kiểm tra HEAT_REACTIONS / Synthesis with requirements
+            if (window.ChemistryEngine && beaker.chemicals.length > 0) {
+              const synth = window.ChemistryEngine.checkSynthesisReactions(beaker.chemicals, { ...env, isHeating: true });
+              if (synth && synth.type === 'synthesis') {
+                const rData = window.REACTIONS[synth.key] || window.HEAT_REACTIONS[synth.key];
+                if (rData) {
+                  executeReaction(beaker, { ...rData, isHeatTriggered: true });
+                  return;
+                }
+              }
+            }
+
             if (window.HEAT_REACTIONS) {
               const sortedEntries = Object.entries(window.HEAT_REACTIONS).sort((a, b) => (b[1].reactants?.length || 0) - (a[1].reactants?.length || 0));
               for (const [key, rxn] of sortedEntries) {
                 const needed = rxn.reactants || [];
                 const presentIds = beaker.chemicals.map(c => c.id);
                 if (needed.length > 0 && needed.every(r => presentIds.includes(r))) {
+                  // Additional check if rxn requires a catalyst that isn't in beaker.chemicals
+                  if (rxn.requires?.catalyst && !presentIds.includes(rxn.requires.catalyst)) {
+                    continue;
+                  }
                   executeReaction(beaker, { ...rxn, isHeatTriggered: true });
                   return;
                 }

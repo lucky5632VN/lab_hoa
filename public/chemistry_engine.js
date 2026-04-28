@@ -471,8 +471,9 @@ const ChemistryEngine = {
           };
         } else {
            // Nếu đủ điều kiện, trả về phản ứng thật (nếu là synthesis)
-           // Tìm key của phản ứng này trong HEAT_REACTIONS
-           const rKey = Object.keys(window.HEAT_REACTIONS || {}).find(k => window.HEAT_REACTIONS[k] === r);
+           // Tìm key của phản ứng này trong HEAT_REACTIONS hoặc REACTIONS
+           const rKey = Object.keys(window.HEAT_REACTIONS || {}).find(k => window.HEAT_REACTIONS[k] === r) ||
+                        Object.keys(window.REACTIONS || {}).find(k => window.REACTIONS[k] === r);
            return { type: 'synthesis', key: rKey, message: r.observation || 'Đang xảy ra phản ứng...' };
         }
       }
