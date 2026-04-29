@@ -503,13 +503,15 @@ window.OptimizationLab = {
 
       .reaction-equation {
         font-family: 'Orbitron', sans-serif;
-        font-size: 18px;
-        font-weight: bold;
+        font-size: 28px;
+        font-weight: 900;
         text-align: center;
-        padding: 12px;
-        background: rgba(15, 23, 42, 0.6);
-        border-radius: 6px;
-        border: 1px solid rgba(0, 255, 204, 0.2);
+        padding: 20px;
+        background: rgba(15, 23, 42, 0.8);
+        border-radius: 12px;
+        border: 2px solid rgba(0, 255, 204, 0.4);
+        box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+        color: #fff;
       }
 
       .reaction-equation .reactant { color: inherit; }
@@ -560,10 +562,6 @@ window.OptimizationLab = {
           <div class="opt-visualization">
             <div class="reaction-display">
               <div class="molecule-chamber" id="chamber"></div>
-              <div class="chamber-legend">
-                <div class="legend-item"><span class="dot reactant"></span> Chất tham gia</div>
-                <div class="legend-item"><span class="dot product"></span> Sản phẩm</div>
-              </div>
               <div class="reaction-equation" id="opt-eq-box">
                 <!-- Equation generated dynamically -->
               </div>
@@ -655,31 +653,31 @@ window.OptimizationLab = {
     if (eqBox) {
       let eqHtml = '';
       if (this.currentReaction === 'haber') {
-        eqHtml = `<span style="color:#3b82f6 !important">N₂</span> <span style="color:#fff !important">+</span> <span style="color:#facc15 !important">3H₂</span>`;
+        eqHtml = `<span style="color:#fff !important">N₂</span> <span style="color:#fff !important">+</span> <span style="color:#fff !important">3H₂</span>`;
       } else if (this.currentReaction === 'ester') {
-        eqHtml = `<span style="color:#10b981 !important">CH₃COOH</span> <span style="color:#fff !important">+</span> <span style="color:#f97316 !important">C₂H₅OH</span>`;
+        eqHtml = `<span style="color:#fff !important">CH₃COOH</span> <span style="color:#fff !important">+</span> <span style="color:#fff !important">C₂H₅OH</span>`;
       } else if (this.currentReaction === 'fescn') {
-        eqHtml = `<span style="color:#f59e0b !important">Fe³⁺</span> <span style="color:#fff !important">+</span> <span style="color:#eab308 !important">3SCN⁻</span>`;
+        eqHtml = `<span style="color:#fff !important">Fe³⁺</span> <span style="color:#fff !important">+</span> <span style="color:#fff !important">3SCN⁻</span>`;
       } else if (this.currentReaction === 'no2') {
-        eqHtml = `<span style="color:#a52a2a !important">2NO₂</span>`;
+        eqHtml = `<span style="color:#fff !important">2NO₂</span>`;
       }
       
       let prodHtml = '';
       if (this.currentReaction === 'haber') {
-        prodHtml = `<span style="color:#ef4444 !important">2NH₃</span>`;
+        prodHtml = `<span style="color:#fff !important">2NH₃</span>`;
       } else if (this.currentReaction === 'ester') {
-        prodHtml = `<span style="color:#a855f7 !important">CH₃COOC₂H₅</span> <span style="color:#fff !important">+</span> <span style="color:#06b6d4 !important">H₂O</span>`;
+        prodHtml = `<span style="color:#fff !important">CH₃COOC₂H₅</span> <span style="color:#fff !important">+</span> <span style="color:#fff !important">H₂O</span>`;
       } else if (this.currentReaction === 'fescn') {
-        prodHtml = `<span style="color:#b91c1c !important">[Fe(SCN)]²⁺</span>`;
+        prodHtml = `<span style="color:#fff !important">[Fe(SCN)]²⁺</span>`;
       } else if (this.currentReaction === 'no2') {
         prodHtml = `<span style="color:#ffffff !important">N₂O₄</span>`;
       }
 
       eqBox.innerHTML = `
         <span class="reactant">${eqHtml}</span>
-        <span class="arrow" id="eq-arrow" style="margin: 0 10px;">⇌</span>
+        <span class="arrow" id="eq-arrow" style="margin: 0 20px;">⇌</span>
         <span class="product">${prodHtml}</span>
-        <span class="deltaH" style="display:block; font-size:12px; color:#ff3131; text-align:center; margin-top:10px;">${rxn.delta}</span>
+        <span style="font-size: 20px; margin-left: 35px; color: #fff; font-weight: 900; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; opacity: 0.9;">(${rxn.delta})</span>
       `;
 
       // Cập nhật legend dots ngay lập tức
@@ -764,34 +762,6 @@ window.OptimizationLab = {
     const chamber = document.getElementById('chamber');
     if (!chamber) return;
     
-    const legendContainer = document.querySelector('.chamber-legend');
-    if (legendContainer) {
-      if (this.currentReaction === 'haber') {
-        legendContainer.innerHTML = `
-          <div class="legend-item"><span class="dot" style="background:#3b82f6; box-shadow: 0 0 8px #3b82f6;"></span> N₂ (Khí Nitơ)</div>
-          <div class="legend-item"><span class="dot" style="background:#facc15; box-shadow: 0 0 8px #facc15;"></span> H₂ (Khí Hydro)</div>
-          <div class="legend-item"><span class="dot" style="background:#ef4444; box-shadow: 0 0 8px #ef4444;"></span> NH₃ (Amoniac)</div>
-        `;
-      } else if (this.currentReaction === 'ester') {
-        legendContainer.innerHTML = `
-          <div class="legend-item"><span class="dot" style="background:#10b981; box-shadow: 0 0 8px #10b981;"></span> Axit</div>
-          <div class="legend-item"><span class="dot" style="background:#f97316; box-shadow: 0 0 8px #f97316;"></span> Rượu</div>
-          <div class="legend-item"><span class="dot" style="background:#a855f7; box-shadow: 0 0 8px #a855f7;"></span> Este + H₂O</div>
-        `;
-      } else if (this.currentReaction === 'fescn') {
-        legendContainer.innerHTML = `
-          <div class="legend-item"><span class="dot" style="background:#f59e0b; box-shadow: 0 0 8px #f59e0b;"></span> Fe³⁺</div>
-          <div class="legend-item"><span class="dot" style="background:#eab308; box-shadow: 0 0 8px #eab308;"></span> SCN⁻</div>
-          <div class="legend-item"><span class="dot" style="background:#b91c1c; box-shadow: 0 0 8px #b91c1c;"></span> [Fe(SCN)]²⁺</div>
-        `;
-      } else if (this.currentReaction === 'no2') {
-        legendContainer.innerHTML = `
-          <div class="legend-item"><span class="dot" style="background:#a52a2a; box-shadow: 0 0 8px #a52a2a;"></span> NO₂ (Nâu đỏ)</div>
-          <div class="legend-item"><span class="dot" style="background:#ffffff; box-shadow: 0 0 8px #ffffff;"></span> N₂O₄ (Không màu)</div>
-        `;
-      }
-    }
-
     chamber.innerHTML = '';
     const totalParticles = 30;
     const yieldPercent = this.state.yield;

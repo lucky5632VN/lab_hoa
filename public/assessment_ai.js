@@ -318,6 +318,11 @@ window.generateGreenReport = function() {
   if (window.addLog) {
     window.addLog('info', `[ECO-REPORT] 📊 Cấp bậc: ${rankInfo.title} | Năng lượng: ${energy.toFixed(1)}% | Lãng phí: ${data.totalWaste.toFixed(2)}g`);
   }
+
+  // ——— PLAY ALERT SOUND IF FAILURE ———
+  if (rankInfo.cls === 'rank-failure' && window.AudioSystem) {
+    window.AudioSystem.playAlert(2);
+  }
 };
 
 // ——— EXPORT TXT ———

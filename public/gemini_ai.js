@@ -1,5 +1,5 @@
 /* ——— GEMINI AI INTEGRATION ——— */
-let GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || window.localStorage.getItem('QUANTUM_API_KEY') || '';
+let GEMINI_API_KEY = window.localStorage.getItem('QUANTUM_API_KEY') || '';
 
 class UnifiedChatbot {
   constructor() {
@@ -15,9 +15,11 @@ class UnifiedChatbot {
   }
 
   init() {
+    console.log("🛠️ [Quantum AI] Khởi tạo Chatbot...");
     this.injectHTML();
     this.addEventListeners();
     this.loadWelcomeMessage();
+    console.log("✅ [Quantum AI] Chatbot đã sẵn sàng!");
   }
 
   injectHTML() {
@@ -27,16 +29,20 @@ class UnifiedChatbot {
     const container = document.createElement('div');
     container.id = 'unified-chatbot-container';
     container.className = 'chatbot-container';
-    
+
     container.innerHTML = `
       <div id="chatbot-notification" class="chatbot-notification" style="display: none;">!</div>
-      <button id="chatbot-toggle" class="chatbot-toggle" style="display: none;"></button>
+      <button id="chatbot-toggle" class="chatbot-toggle" style="display: none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </button>
       
       <div id="chatbot-window" class="chatbot-window" style="width: 380px; height: 560px; display: none; flex-direction: column; position: fixed; bottom: 20px; right: 20px; z-index: 10000;">
         <!-- TABS NAVIGATION -->
         <div class="chatbot-modes" style="display: flex; background: rgba(15, 23, 42, 0.8); border-bottom: 1px solid var(--chat-border); padding: 6px 6px 0 6px; gap: 4px;">
-          <button onclick="switchChatMode('lab')" id="tab-mode-lab" style="flex: 1; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); border-bottom: none; padding: 10px 4px; border-radius: 8px 8px 0 0; font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: bold; cursor: pointer; transition: all 0.2s;">⚡ CHỈ HUY AI</button>
-          <button onclick="switchChatMode('gen')" id="tab-mode-gen" style="flex: 1; background: transparent; color: #94a3b8; border: 1px solid transparent; border-bottom: none; padding: 10px 4px; border-radius: 8px 8px 0 0; font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: bold; cursor: pointer; transition: all 0.2s;">🌐 TRỢ LÝ CHUNG</button>
+          <button onclick="switchChatMode('lab')" id="tab-mode-lab" style="flex: 1; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); border-bottom: none; padding: 10px 4px; border-radius: 8px 8px 0 0; font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: bold; cursor: pointer; transition: all 0.2s;">⚡ CHỈ HUY</button>
+          <button onclick="switchChatMode('gen')" id="tab-mode-gen" style="flex: 1; background: transparent; color: #94a3b8; border: 1px solid transparent; border-bottom: none; padding: 10px 4px; border-radius: 8px 8px 0 0; font-family: 'Orbitron', sans-serif; font-size: 10px; font-weight: bold; cursor: pointer; transition: all 0.2s;">🌐 TRỢ LÝ</button>
         </div>
 
         <!-- SECTION 1: AI ASSISTANTS -->
@@ -70,6 +76,9 @@ class UnifiedChatbot {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
             </button>
           </div>
+        </div>
+
+        <!-- SECTION 2: FAQ -->
         </div>
 
         <!-- NO FAQ SECTION -->
@@ -121,14 +130,24 @@ class UnifiedChatbot {
   }
 
   toggle() {
+    console.log("📡 [Quantum AI] Yêu cầu đóng/mở khung chat...");
     const win = document.getElementById('chatbot-window');
     const notif = document.getElementById('chatbot-notification');
-    if (!win) return;
+    if (!win) {
+      console.error("❌ [Quantum AI] LỖI: Không tìm thấy #chatbot-window!");
+      return;
+    }
 
-    const isVisible = win.style.display === 'flex';
-    win.style.display = isVisible ? 'none' : 'flex';
-    if (!isVisible && notif) {
-      notif.style.display = 'none';
+    const currentDisplay = window.getComputedStyle(win).display;
+    console.log("📊 [Quantum AI] Trạng thái hiện tại:", currentDisplay);
+
+    if (currentDisplay === 'none') {
+      win.style.setProperty('display', 'flex', 'important');
+      if (notif) notif.style.display = 'none';
+      console.log("🔓 [Quantum AI] Đã HIỆN khung chat");
+    } else {
+      win.style.setProperty('display', 'none', 'important');
+      console.log("🔒 [Quantum AI] Đã ẨN khung chat");
     }
   }
 
@@ -181,7 +200,7 @@ class UnifiedChatbot {
     if (msgArea) {
       msgArea.innerHTML = '';
       const historyToLoad = botId === 'lab' ? this.labHistory : this.genHistory;
-      
+
       if (historyToLoad.length === 0) {
         this.loadWelcomeMessage();
       } else {
@@ -215,7 +234,7 @@ class UnifiedChatbot {
 
     const msgDiv = document.createElement('div');
     msgDiv.className = `message ${role}`;
-    
+
     let formatted = text
       .replace(/\$([^\$]+)\$/g, (match, p1) => {
         let clean = p1
@@ -227,7 +246,7 @@ class UnifiedChatbot {
       .replace(/\n/g, '<br>')
       .replace(/^- (.*)$/gm, '• $1')
       .replace(/^([🎯💡🌍⚠️].*):/gm, '<div style="color:#38bdf8; font-weight:bold; margin-top:10px; font-family:Orbitron, sans-serif;">$1</div>');
-    
+
     msgDiv.innerHTML = formatted;
     chatMsgs.appendChild(msgDiv);
     chatMsgs.scrollTop = chatMsgs.scrollHeight;
@@ -239,7 +258,7 @@ class UnifiedChatbot {
 
     const qaData = window.QA_DATA || [];
     faqSec.innerHTML = '';
-    
+
     qaData.forEach(qa => {
       const item = document.createElement('div');
       item.style.background = 'rgba(30, 41, 59, 0.6)';
@@ -259,7 +278,7 @@ class UnifiedChatbot {
 
     if (type === 'reaction') {
       this.lastReactionData = data;
-      
+
       const win = document.getElementById('chatbot-window');
       if (win && win.style.display !== 'flex') {
         const toggle = document.getElementById('chatbot-toggle');
@@ -303,7 +322,7 @@ class UnifiedChatbot {
   async handleUserInput() {
     const input = document.getElementById('chatbot-input');
     if (!input || this.isTyping) return;
-    
+
     const text = input.value.trim();
     if (!text) return;
 
@@ -332,7 +351,7 @@ class UnifiedChatbot {
     if (!GEMINI_API_KEY) {
       throw new Error('Thiếu API Key.');
     }
-    
+
     let context = "";
     let systemPrompt = "";
 
@@ -380,7 +399,7 @@ class UnifiedChatbot {
     if (this.workingModel) {
       modelsToTry = [this.workingModel, ...modelsToTry.filter(m => m !== this.workingModel)];
     }
-    
+
     const apiVersions = ['v1beta', 'v1'];
     let lastError = null;
 
@@ -388,7 +407,7 @@ class UnifiedChatbot {
       for (const version of apiVersions) {
         try {
           const url = `https://generativelanguage.googleapis.com/${version}/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
-          
+
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 8000);
 
@@ -455,7 +474,7 @@ class UnifiedChatbot {
           if (available.length > 0) return available;
         }
       }
-    } catch (e) {}
+    } catch (e) { }
     return fallbackModels;
   }
 }
@@ -464,3 +483,23 @@ window.quantumChatbot = new UnifiedChatbot();
 window.labBot = window.quantumChatbot;
 window.generalBot = window.quantumChatbot;
 window.chatbot = window.quantumChatbot;
+
+// Tích hợp: Đảm bảo nút "Hỏi đáp" ở Header mở đúng khung chat này
+window.toggleQA = () => {
+  console.log("🖱️ [Quantum AI] Header Button Clicked!");
+  if (window.quantumChatbot) {
+    window.quantumChatbot.toggle();
+  } else {
+    console.warn("⚠️ [Quantum AI] window.quantumChatbot chưa được khởi tạo!");
+  }
+};
+
+// Đảm bảo nút nổi (floating button) hoạt động ngay cả khi load chậm
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('chatbot-toggle');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      if (window.quantumChatbot) window.quantumChatbot.toggle();
+    });
+  }
+});

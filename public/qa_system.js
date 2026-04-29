@@ -318,43 +318,53 @@ window.selectQAIdBot = function(botId) {
 window.updatePanelAIMessages = function() {
   const msgsDiv = document.getElementById('panel-ai-messages');
   if (!msgsDiv) return;
-  
-  msgsDiv.innerHTML = '';
-  const bot = window.qaSelectedBot === 'lab' ? window.labBot : window.generalBot;
-  
-  if (bot && bot.history) {
-    bot.history.forEach(msg => {
-      const mDiv = document.createElement('div');
-      mDiv.style.padding = '8px 12px';
-      mDiv.style.borderRadius = '8px';
-      mDiv.style.maxWidth = '85%';
-      mDiv.style.lineHeight = '1.4';
-      
-      if (msg.role === 'user') {
-        mDiv.style.background = 'rgba(56, 189, 248, 0.15)';
-        mDiv.style.border = '1px solid rgba(56, 189, 248, 0.3)';
-        mDiv.style.color = '#fff';
-        mDiv.style.alignSelf = 'flex-end';
-        mDiv.style.marginLeft = 'auto';
-      } else {
-        mDiv.style.background = 'rgba(30, 41, 59, 0.8)';
-        mDiv.style.border = '1px solid rgba(255, 255, 255, 0.05)';
-        mDiv.style.color = '#cbd5e1';
-        mDiv.style.alignSelf = 'flex-start';
-      }
-      
-      let text = msg.text;
-      let formatted = text
-        .replace(/\$([^\$]+)\$/g, '<b style="color:#00ffcc">$1</b>')
-        .replace(/\n/g, '<br>')
-        .replace(/^- (.*)$/gm, '• $1')
-        .replace(/^([🎯💡🌍⚠️].*):/gm, '<div style="color:#38bdf8; font-weight:bold; margin-top:6px; font-family:Orbitron, sans-serif;">$1</div>');
 
+  msgsDiv.innerHTML = '';
+  const isLab = (window.qaSelectedBot !== 'gen');
+  const bot = isLab ? window.labBot : window.generalBot;
+  if (!bot || !bot.history) return;
+
+  const botLabel = isLab ? '⚡ Lab Commander' : '🌐 Quantum AI';
+  const botColor = isLab ? '#4ade80' : '#38bdf8';
+
+  bot.history.forEach(msg => {
+    const mDiv = document.createElement('div');
+    mDiv.style.cssText = 'padding:9px 13px;border-radius:10px;max-width:88%;line-height:1.55;word-break:break-word;';
+
+    if (msg.role === 'user') {
+      mDiv.style.background = 'rgba(56,189,248,0.12)';
+      mDiv.style.border = '1px solid rgba(56,189,248,0.3)';
+      mDiv.style.color = '#e2e8f0';
+      mDiv.style.alignSelf = 'flex-end';
+      mDiv.style.marginLeft = 'auto';
+      mDiv.style.borderBottomRightRadius = '2px';
+    } else {
+      mDiv.style.background = 'rgba(15,23,42,0.85)';
+      mDiv.style.border = `1px solid ${botColor}33`;
+      mDiv.style.color = '#cbd5e1';
+      mDiv.style.alignSelf = 'flex-start';
+      mDiv.style.borderBottomLeftRadius = '2px';
+    }
+
+    // Markdown-lite formatter
+    let formatted = msg.text
+      .replace(/\*\*([^*]+)\*\*/g, `<b style="color:${botColor}">$1</b>`)
+      .replace(/\*([^*\n]+)\*/g, '<em style="color:#94a3b8">$1</em>')
+      .replace(/`([^`]+)`/g, '<code style="background:rgba(0,0,0,0.4);padding:1px 5px;border-radius:3px;font-size:11px;color:#00ffcc">$1</code>')
+      .replace(/\$([^$]+)\$/g, '<b style="color:#00ffcc">$1</b>')
+      .replace(/\n/g, '<br>')
+      .replace(/^[-•] (.*)$/gm, '&bull; $1');
+
+    if (msg.role === 'ai') {
+      mDiv.innerHTML = `<div style="font-size:10px;color:${botColor};font-weight:bold;font-family:'Orbitron',sans-serif;margin-bottom:5px;opacity:0.9;">${botLabel}</div>${formatted}`;
+    } else {
       mDiv.innerHTML = formatted;
-      msgsDiv.appendChild(mDiv);
-    });
-    msgsDiv.scrollTop = msgsDiv.scrollHeight;
-  }
+    }
+
+    msgsDiv.appendChild(mDiv);
+  });
+
+  requestAnimationFrame(() => { msgsDiv.scrollTop = msgsDiv.scrollHeight; });
 };
 
 window.sendQAInPanelChat = async function() {

@@ -88,9 +88,9 @@
     <div class="header-left">
       <div class="lab-logo">
         <span class="logo-icon" style="display:flex;align-items:center;">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff3344" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.52 16h12.96"/>
-            <path d="M6 16 a6 6 0 0 0 12 0 Z" fill="rgba(255,51,68,0.3)" stroke="none"/>
+            <path d="M6 16 a6 6 0 0 0 12 0 Z" fill="rgba(56,189,248,0.3)" stroke="none"/>
           </svg>
         </span>
         <div class="logo-titles">
@@ -248,27 +248,26 @@
           <div class="ard-body">
             <div id="ardEquation" class="ard-equation"></div>
             <div id="ardObservation" class="ard-observation"></div>
+            
+            <!-- Tích hợp phần giải thích học thuật -->
+            <div id="academicExplanationDisplay" style="margin-top: 15px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; display: none; flex-direction: column;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <span style="font-size: 14px;">💡</span>
+                <span style="font-family: 'Orbitron', sans-serif; font-size: 11px; color: #facc15; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Bản chất hóa học</span>
+              </div>
+              <div id="academicExplanationText" style="font-family: 'Inter', sans-serif; font-size: 12.5px; color: #e2e8f0; line-height: 1.6; min-height: 40px;"></div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                <span id="acaStepIndicator" style="font-size: 10px; color: #64748b; font-family: 'Orbitron', sans-serif;">Bước 1 / 1</span>
+                <div style="display: flex; gap: 6px;">
+                  <button id="acaBtnPrev" onclick="window.acaPrevStep()" style="background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; transition: 0.2s;">◀</button>
+                  <button id="acaBtnNext" onclick="window.acaNextStep()" style="background: #facc15; border: none; color: #0f172a; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.2s;">▶</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Academic Mechanism Display -->
-        <div id="academicExplanationDisplay" class="active-reaction-display" style="top: auto; bottom: 20px; left: 50%; transform: translateX(-50%); width: 450px; padding: 15px; background: rgba(15, 23, 42, 0.95); border-left: 4px solid #facc15; box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 1000; display: none; flex-direction: column; position: fixed;">
-          <div class="ard-header" id="acaDragHandle" style="border-bottom: 1px solid rgba(250, 204, 21, 0.3); padding-bottom: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; cursor: grab;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 16px;">💡</span>
-              <span style="font-family: 'Orbitron', sans-serif; font-size: 13px; color: #facc15; font-weight: 600; letter-spacing: 1px;">BẢN CHẤT HÓA HỌC</span>
-            </div>
-            <button class="ard-close" onclick="document.getElementById('academicExplanationDisplay').style.display='none'" style="background: none; border: none; color: #94a3b8; cursor: pointer;">&#x2715;</button>
-          </div>
-          <div id="academicExplanationText" style="font-family: 'Inter', sans-serif; font-size: 13px; color: #e2e8f0; line-height: 1.6; min-height: 50px;"></div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1);">
-            <span id="acaStepIndicator" style="font-size: 11px; color: #64748b; font-family: 'Orbitron', sans-serif;">Bước 1 / 1</span>
-            <div style="display: flex; gap: 8px;">
-              <button id="acaBtnPrev" onclick="window.acaPrevStep()" style="background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; transition: 0.2s;">◀ Lùi</button>
-              <button id="acaBtnNext" onclick="window.acaNextStep()" style="background: #facc15; border: none; color: #0f172a; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.2s;">Tiếp ▶</button>
-            </div>
-          </div>
-        </div>
+
 
         <div class="drop-hint" id="dropHint" style="display: none;">
           <div class="drop-hint-inner">
@@ -483,21 +482,21 @@
   <!-- ECO-REPORT Overlay -->
   <div id="eco-report-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9998; align-items:center; justify-content:center; backdrop-filter:blur(6px);"></div>
 
-  <script src="data.js"></script>
-  <script src="chemicals_extended.js"></script>
-  <script src="chemicals_idcl.js"></script>
-  <script src="chemicals_bigdata.js"></script>
-  <script src="chemicals_conc_reactions.js"></script>
-  <script src="chemicals_academic_pro.js"></script>
-  <script src="phenomena_db.js"></script>
-  <script src="particles.js"></script>
-  <script src="chemistry_engine.js"></script>
-  <script src="lab.js"></script>
-  <script src="library_data.js"></script>
-  <script src="library_ui.js"></script>
-  <script src="qa_system.js"></script>
-  <script src="assessment_ai.js"></script>
-  <script src="optimization_lab.js"></script>
-  <script type="module" src="gemini_ai.js"></script>
+  <script src="public/data.js"></script>
+  <script src="public/chemicals_extended.js"></script>
+  <script src="public/chemicals_idcl.js"></script>
+  <script src="public/chemicals_bigdata.js"></script>
+  <script src="public/chemicals_conc_reactions.js"></script>
+  <script src="public/chemicals_academic_pro.js"></script>
+  <script src="public/phenomena_db.js"></script>
+  <script src="public/particles.js"></script>
+  <script src="public/chemistry_engine.js"></script>
+  <script src="public/lab.js"></script>
+  <script src="public/library_data.js"></script>
+  <script src="public/library_ui.js"></script>
+  <script src="public/qa_system.js"></script>
+  <script src="public/assessment_ai.js"></script>
+  <script src="public/optimization_lab.js"></script>
+  <script src="public/gemini_ai.js"></script>
 </body>
 </html>

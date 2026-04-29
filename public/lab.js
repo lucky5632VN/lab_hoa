@@ -11,19 +11,20 @@ const AudioSystem = {
 
   init() {
     try {
-      this._alertAudio = new Audio('music/alert.mp3');
+      this._alertAudio = new Audio('/music/alert.mp3');
       this._alertAudio.preload = 'auto';
       this._alertAudio.volume = this._volume;
 
-      this._shatterAudio = new Audio('music/shatter.mp3');
+      this._shatterAudio = new Audio('/music/shatter.mp3');
       this._shatterAudio.preload = 'auto';
       this._shatterAudio.volume = this._volume;
 
-      this._explosionAudio = new Audio('music/explosion.mp3');
+      this._explosionAudio = new Audio('/music/explosion.mp3');
       this._explosionAudio.preload = 'auto';
       this._explosionAudio.volume = this._volume;
+      console.log('[AudioSystem] 🔊 Hệ thống âm thanh đã khởi tạo.');
     } catch(e) {
-      console.warn('[AudioSystem] Could not load audio files:', e);
+      console.error('[AudioSystem] ❌ Lỗi khởi tạo âm thanh:', e);
     }
   },
 
@@ -34,16 +35,21 @@ const AudioSystem = {
   playAlert(level = 2) {
     if (this._isMuted || !this._alertAudio) return;
     try {
+      console.log('[AudioSystem] 🚨 Đang phát cảnh báo mức:', level);
       this._alertAudio.currentTime = 0;
       this._alertAudio.volume = level >= 2 ? this._volume : this._volume * 0.4;
       // Dừng sau thời gian tương ứng level
       const duration = level >= 2 ? 4000 : 1500;
-      this._alertAudio.play().catch(() => {});
+      this._alertAudio.play().then(() => {
+        console.log('[AudioSystem] ✅ Phát thành công.');
+      }).catch((err) => {
+        console.error('[AudioSystem] ❌ Lỗi play():', err);
+      });
       if (level < 2) {
         setTimeout(() => { try { this._alertAudio.pause(); } catch(e){} }, duration);
       }
     } catch(e) {
-      console.warn('[AudioSystem] playAlert error:', e);
+      console.error('[AudioSystem] ❌ Lỗi playAlert:', e);
     }
   },
 
@@ -92,8 +98,25 @@ const AudioSystem = {
   }
 };
 
+window.AudioSystem = AudioSystem;
+
 // Khởi tạo AudioSystem khi DOM sẵn sàng
-document.addEventListener('DOMContentLoaded', () => AudioSystem.init());
+document.addEventListener('DOMContentLoaded', () => {
+  AudioSystem.init();
+  
+  // Audio Unlocker: Mở khóa âm thanh trên trình duyệt sau lần click đầu tiên
+  const unlockAudio = () => {
+    if (AudioSystem._alertAudio) {
+      AudioSystem._alertAudio.play().then(() => {
+        AudioSystem._alertAudio.pause();
+        AudioSystem._alertAudio.currentTime = 0;
+      }).catch(e => {});
+    }
+    document.removeEventListener('click', unlockAudio);
+    console.log('[AudioSystem] 🔓 Đã mở khóa âm thanh.');
+  };
+  document.addEventListener('click', unlockAudio);
+});
 
 // ——— STATE ———
 let state = {
@@ -1930,6 +1953,11 @@ function executeReaction(container, reaction) {
     // Cập nhật bảng hiển thị phản ứng persistent
     updateActiveReactionDisplay(reaction);
 
+    // ——— NOTIFY LAB COMMANDER BOT với ngữ cảnh phản ứng ———
+    if (window.chatbot && typeof window.chatbot.notify === 'function') {
+      window.chatbot.notify('reaction', reaction);
+    }
+
     // --- IDCL: EMIT REACTION COMPLETE EVENT (Observer Pattern) ---
     window.dispatchEvent(new CustomEvent('chemistry:reaction-complete', {
       detail: {
@@ -2247,7 +2275,7 @@ function updateActiveReactionDisplay(reaction) {
       if (window._acaTimeout) clearTimeout(window._acaTimeout);
       window._acaTimeout = setTimeout(() => {
         acaDisplay.style.display = 'none';
-      }, 15000);
+      }, 20000);
       
       // Initialize Draggable Logic
       const dragHandle = document.getElementById('acaDragHandle');
