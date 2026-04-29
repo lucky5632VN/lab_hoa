@@ -262,14 +262,18 @@ class UnifiedChatbot {
     let formatted = text
       .replace(/\$([^\$]+)\$/g, (match, p1) => {
         let clean = p1
-          .replace(/([A-Za-z])(\d+)/g, '$1<sub>$2</sub>')
-          .replace(/\^\{?([^\}]+)\}?/g, '<sup>$1</sup>')
-          .replace(/(\d*[+-])$/g, '<sup>$1</sup>');
+          .replace(/([A-Za-z])_?\{?(\d+)\}?/g, '$1<sub>$2</sub>') // Bắt cả H2, H_2, H_{2}
+          .replace(/\^\{?([^\}]+)\}?/g, '<sup>$1</sup>') // Bắt Cu^{2+}, Cu^2+
+          .replace(/(\d*[+-])$/g, '<sup>$1</sup>'); // Bắt Cu2+, Cl-
         return `<b style="color:#00ffcc">${clean}</b>`;
       })
-      .replace(/\n/g, '<br>')
-      .replace(/^- (.*)$/gm, '• $1')
-      .replace(/^([🎯💡🌍⚠️].*):/gm, '<div style="color:#38bdf8; font-weight:bold; margin-top:10px; font-family:Orbitron, sans-serif;">$1</div>');
+      .replace(/^[-*]{3,}\s*$/gm, '<hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.2); margin: 15px 0;">') // Chuyển --- thành đường gạch ngang
+      .replace(/^#+\s*(.*)$/gm, '<b style="color:#38bdf8">$1</b>') // Chuyển Header thành chữ đậm màu xanh
+      .replace(/^[\*\-]\s*(.*)$/gm, '• $1') // Chuyển bullet points (* hoặc -) thành chấm tròn
+      .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') // Chữ in đậm (**)
+      .replace(/\*(.*?)\*/g, '<i>$1</i>') // Chữ in nghiêng (*)
+      .replace(/^([🎯💡🌍⚠️].*):/gm, '<div style="color:#38bdf8; font-weight:bold; margin-top:10px; font-family:Orbitron, sans-serif;">$1</div>')
+      .replace(/\n/g, '<br>');
 
     msgDiv.innerHTML = formatted;
     chatMsgs.appendChild(msgDiv);
@@ -383,42 +387,49 @@ class UnifiedChatbot {
       systemPrompt = `
         Bạn là một Trợ lý AI chuyên gia về Hóa học. 
         NHIỆM VỤ: Trò chuyện và trả lời các câu hỏi của người dùng một cách thân thiện và chính xác.
+        
+        QUY TẮC DANH PHÁP HÓA HỌC (TUYỆT ĐỐI TUÂN THỦ):
+        - BẮT BUỘC dùng 100% tên danh pháp IUPAC (tiếng Anh) cho mọi hóa chất, kim loại, phi kim và ion.
+        - TUYỆT ĐỐI KHÔNG dùng tên tiếng Việt cũ (Ví dụ: KHÔNG dùng Sắt, Đồng, Nhôm, Kẽm, Lưu huỳnh, Axit).
+        - CHỈ ĐƯỢC DÙNG: Iron, Copper, Aluminium, Zinc, Sulfur, Acid, Hydroxide, Oxide, v.v...
+
         QUY TẮC TRÌNH BÀY:
         1. Nếu câu hỏi liên quan đến hóa học, hãy chia sẻ kiến thức chuyên sâu nhưng dễ hiểu.
         2. KHÔNG sử dụng các ký tự đặc biệt như *, #, _, ~ ở đầu câu hoặc bao quanh từ (trừ khi viết công thức).
-        3. BẮT BUỘC sử dụng tên gọi chuẩn quốc tế (IUPAC) cho tất cả hóa chất. KHÔNG sử dụng tên gọi tiếng Việt cũ (Ví dụ: dùng Copper thay vì Đồng, Nitric acid thay vì Axit Nitric, Nitrogen dioxide thay vì Nitơ đioxit).
-        4. Viết công thức hóa học trong cặp dấu $ (Ví dụ: $H2SO4$, $Cu2+$, $NO3-$).
-        5. Ngôn ngữ: Tiếng Việt, phong cách chuyên nghiệp.
+        3. Viết công thức hóa học trong cặp dấu $ (Ví dụ: $H2SO4$, $Cu2+$, $NO3-$).
+        4. Ngôn ngữ: Tiếng Việt, phong cách chuyên nghiệp.
       `;
     } else {
       context = this.getLabContext();
       systemPrompt = `
         Bạn là "Quantum Commander", trợ lý AI của QuantumLab. 
         NHIỆM VỤ: Giải thích phản ứng hóa học dựa trên dữ liệu phòng Lab.
+        
+        QUY TẮC DANH PHÁP HÓA HỌC (TUYỆT ĐỐI TUÂN THỦ):
+        - BẮT BUỘC dùng 100% tên danh pháp IUPAC (tiếng Anh) cho mọi hóa chất, kim loại, phi kim và ion.
+        - TUYỆT ĐỐI KHÔNG dùng tên tiếng Việt cũ (Ví dụ: KHÔNG dùng Sắt, Đồng, Nhôm, Kẽm, Lưu huỳnh, Axit).
+        - CHỈ ĐƯỢC DÙNG: Iron, Copper, Aluminium, Zinc, Sulfur, Acid, Hydroxide, Oxide, v.v...
+
         QUY TẮC TRÌNH BÀY (BẮT BUỘC):
-        1. Câu trả lời phải chia thành 4 phần rõ ràng: 
+        1. Câu trả lời phải chia thành 4 phần rõ ràng (TUYỆT ĐỐI KHÔNG thêm phần giải thích thừa ở cuối): 
            - 🎯 TÓM TẮT: (Phản ứng là gì)
-           - 💡 CƠ CHẾ & HIỆN TƯỢNG: (Dùng gạch đầu dòng ngắn gọn)
+           - 💡 CƠ CHẾ & HIỆN TƯỢNG: (Giải thích ngay tại đây bằng gạch đầu dòng)
            - 🌍 ỨNG DỤNG THỰC TẾ: (Ứng dụng trong đời sống hoặc công nghiệp)
-           - ⚠️ LƯU Ý AN TOÀN: (Cảnh báo nếu có)
+           - ⚠️ LƯU Ý AN TOÀN: (Cảnh báo nếu có. KẾT THÚC CÂU TRẢ LỜI TẠI ĐÂY)
         2. KHÔNG sử dụng các ký tự đặc biệt như *, #, _, ~ ở đầu câu hoặc bao quanh từ (trừ khi viết công thức).
-        3. BẮT BUỘC sử dụng tên gọi chuẩn quốc tế (IUPAC) cho tất cả hóa chất. KHÔNG sử dụng tên gọi tiếng Việt cũ (Ví dụ: dùng Copper thay vì Đồng, Nitric acid thay vì Axit Nitric, Nitrogen dioxide thay vì Nitơ đioxit).
-        4. Viết công thức hóa học trong cặp dấu $ (Ví dụ: $H2SO4$, $Cu2+$, $NO3-$).
-        5. Ngôn ngữ: Tiếng Việt, phong cách chuyên nghiệp, dễ hiểu.
+        3. Viết công thức hóa học trong cặp dấu $ (Ví dụ: $H2SO4$, $Cu2+$, $NO3-$).
+        4. Ngôn ngữ: Tiếng Việt, phong cách chuyên nghiệp, ngắn gọn.
         
         Trạng thái Lab hiện tại: ${context}
       `;
     }
 
     let modelsToTry = [
-      'gemini-2.5-flash-lite',
-      'gemini-1.5-flash-latest',
-      'gemini-1.5-flash',
-      'gemini-1.5-flash-8b-latest',
-      'gemini-1.5-flash-8b',
-      'gemini-2.0-flash-exp',
+      'gemini-2.5-flash',
+      'gemini-2.5-pro',
+      'gemini-2.0-flash-lite',
       'gemini-2.0-flash',
-      'gemini-flash-latest'
+      'gemini-1.5-pro'
     ];
 
     // Ưu tiên các model đã tự động khám phá được
@@ -426,7 +437,7 @@ class UnifiedChatbot {
       modelsToTry = [...new Set([...this.availableModels, ...modelsToTry])];
     }
 
-    // ÉP BUỘC gemini-2.5-flash-lite LÊN ĐẦU TIÊN (vì nó đã được xác nhận hoạt động)
+    // ÉP BUỘC gemini-2.5-flash LÊN ĐẦU TIÊN (vì nó đã được xác nhận hoạt động)
     modelsToTry = [...new Set(['gemini-2.5-flash-lite', ...modelsToTry])];
 
     if (this.workingModel) {
@@ -491,9 +502,9 @@ class UnifiedChatbot {
 
   async discoverModels() {
     const fallbackModels = [
-      'gemini-1.5-flash',
-      'gemini-1.5-pro',
-      'gemini-3.1-flash-lite-preview'
+      'gemini-2.5-flash',
+      'gemini-2.0-flash',
+      'gemini-1.5-pro'
     ];
 
     try {
