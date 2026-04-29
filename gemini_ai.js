@@ -1,5 +1,23 @@
 /* ——— GEMINI AI INTEGRATION ——— */
-let GEMINI_API_KEY = window.localStorage.getItem('QUANTUM_API_KEY') || '';
+// Lấy API Key từ biến môi trường (.env) hoặc LocalStorage (An toàn cho mọi môi trường)
+let GEMINI_API_KEY = "";
+try {
+  if (import.meta && import.meta.env) {
+    GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
+  }
+} catch (e) {
+  console.warn("⚠️ [Quantum AI] Không thể truy cập import.meta.env, sử dụng LocalStorage làm dự phòng.");
+}
+
+if (!GEMINI_API_KEY) {
+  GEMINI_API_KEY = window.localStorage.getItem('QUANTUM_API_KEY') || "";
+}
+
+if (GEMINI_API_KEY) {
+  console.log("📡 [Quantum AI] API Key detected: " + GEMINI_API_KEY.substring(0, 4) + "...");
+} else {
+  console.warn("⚠️ [Quantum AI] No API Key found. Please check your .env file or set it in Chatbot settings.");
+}
 
 class UnifiedChatbot {
   constructor() {
@@ -19,6 +37,12 @@ class UnifiedChatbot {
     this.injectHTML();
     this.addEventListeners();
     this.loadWelcomeMessage();
+    this.discoverModels().then(available => {
+      if (available && available.length > 0) {
+        this.availableModels = available;
+        console.log("🔍 [Quantum AI] Mô hình khả dụng:", available.join(', '));
+      }
+    });
     console.log("✅ [Quantum AI] Chatbot đã sẵn sàng!");
   }
 
@@ -387,14 +411,23 @@ class UnifiedChatbot {
     }
 
     let modelsToTry = [
-      'gemini-2.5-flash',
-      'gemini-2.0-flash-lite',
+      'gemini-2.5-flash-lite',
+      'gemini-1.5-flash-latest',
+      'gemini-1.5-flash',
+      'gemini-1.5-flash-8b-latest',
+      'gemini-1.5-flash-8b',
+      'gemini-2.0-flash-exp',
       'gemini-2.0-flash',
-      'gemini-flash-latest',
-      'gemini-flash-lite-latest',
-      'gemini-pro-latest',
-      'gemini-2.5-pro'
+      'gemini-flash-latest'
     ];
+
+    // Ưu tiên các model đã tự động khám phá được
+    if (this.availableModels && this.availableModels.length > 0) {
+      modelsToTry = [...new Set([...this.availableModels, ...modelsToTry])];
+    }
+
+    // ÉP BUỘC gemini-2.5-flash-lite LÊN ĐẦU TIÊN (vì nó đã được xác nhận hoạt động)
+    modelsToTry = [...new Set(['gemini-2.5-flash-lite', ...modelsToTry])];
 
     if (this.workingModel) {
       modelsToTry = [this.workingModel, ...modelsToTry.filter(m => m !== this.workingModel)];
